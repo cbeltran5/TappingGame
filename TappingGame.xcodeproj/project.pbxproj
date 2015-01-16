@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08493D1F1A64DAF5007EC0F7 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08493D1E1A64DAF5007EC0F7 /* GameOverScene.swift */; };
+		088CECC11A5C4C4000DD3BE3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */; };
+		088CECC31A5C4C7200DD3BE3 /* PlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */; };
 		08A767081A5BAF0A0010BEC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A767071A5BAF0A0010BEC4 /* AppDelegate.swift */; };
 		08A7670A1A5BAF0A0010BEC4 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 08A767091A5BAF0A0010BEC4 /* GameScene.sks */; };
 		08A7670C1A5BAF0A0010BEC4 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A7670B1A5BAF0A0010BEC4 /* GameScene.swift */; };
@@ -15,6 +18,8 @@
 		08A767131A5BAF0A0010BEC4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 08A767121A5BAF0A0010BEC4 /* Images.xcassets */; };
 		08A767161A5BAF0A0010BEC4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 08A767141A5BAF0A0010BEC4 /* LaunchScreen.xib */; };
 		08A767221A5BAF0A0010BEC4 /* TappingGameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A767211A5BAF0A0010BEC4 /* TappingGameTests.swift */; };
+		08D7F8A51A657E2E00ACE67B /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08D7F8A41A657E2E00ACE67B /* GameKit.framework */; };
+		08D7F8AB1A66063E00ACE67B /* GCHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D7F8AA1A66063E00ACE67B /* GCHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,6 +33,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		08493D1E1A64DAF5007EC0F7 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayScene.swift; sourceTree = "<group>"; };
 		08A767021A5BAF0A0010BEC4 /* TappingGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TappingGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A767061A5BAF0A0010BEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A767071A5BAF0A0010BEC4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -40,6 +48,8 @@
 		08A7671B1A5BAF0A0010BEC4 /* TappingGameTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TappingGameTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A767201A5BAF0A0010BEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		08A767211A5BAF0A0010BEC4 /* TappingGameTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TappingGameTests.swift; sourceTree = "<group>"; };
+		08D7F8A41A657E2E00ACE67B /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		08D7F8AA1A66063E00ACE67B /* GCHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GCHelper.swift; path = ../GCHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08D7F8A51A657E2E00ACE67B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +94,9 @@
 			children = (
 				08A767071A5BAF0A0010BEC4 /* AppDelegate.swift */,
 				08A767091A5BAF0A0010BEC4 /* GameScene.sks */,
+				08493D1E1A64DAF5007EC0F7 /* GameOverScene.swift */,
 				08A7670B1A5BAF0A0010BEC4 /* GameScene.swift */,
+				088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */,
 				08A7670D1A5BAF0A0010BEC4 /* GameViewController.swift */,
 				08A7670F1A5BAF0A0010BEC4 /* Main.storyboard */,
 				08A767121A5BAF0A0010BEC4 /* Images.xcassets */,
@@ -96,6 +109,9 @@
 		08A767051A5BAF0A0010BEC4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				08D7F8AA1A66063E00ACE67B /* GCHelper.swift */,
+				08D7F8A41A657E2E00ACE67B /* GameKit.framework */,
+				088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */,
 				08A767061A5BAF0A0010BEC4 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -167,6 +183,12 @@
 				TargetAttributes = {
 					08A767011A5BAF0A0010BEC4 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = TB38ZVB5S6;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 					08A7671A1A5BAF0A0010BEC4 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -220,8 +242,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A7670C1A5BAF0A0010BEC4 /* GameScene.swift in Sources */,
+				08D7F8AB1A66063E00ACE67B /* GCHelper.swift in Sources */,
+				088CECC31A5C4C7200DD3BE3 /* PlayScene.swift in Sources */,
 				08A7670E1A5BAF0A0010BEC4 /* GameViewController.swift in Sources */,
 				08A767081A5BAF0A0010BEC4 /* AppDelegate.swift in Sources */,
+				08493D1F1A64DAF5007EC0F7 /* GameOverScene.swift in Sources */,
+				088CECC11A5C4C4000DD3BE3 /* UIColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,9 +372,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TappingGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -356,9 +385,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TappingGame/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -415,6 +447,7 @@
 				08A767271A5BAF0A0010BEC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		08A767281A5BAF0A0010BEC4 /* Build configuration list for PBXNativeTarget "TappingGameTests" */ = {
 			isa = XCConfigurationList;
@@ -423,6 +456,7 @@
 				08A7672A1A5BAF0A0010BEC4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

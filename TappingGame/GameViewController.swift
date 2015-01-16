@@ -42,12 +42,15 @@ class GameViewController: UIViewController {
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
             
+            // Set the view controller of the play scene to self to present leaderboards
+            scene.viewController = self
+            
             skView.presentScene(scene)
         }
     }
 
     override func shouldAutorotate() -> Bool {
-        return true
+        return false
     }
 
     override func supportedInterfaceOrientations() -> Int {
