@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08493D1F1A64DAF5007EC0F7 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08493D1E1A64DAF5007EC0F7 /* GameOverScene.swift */; };
-		088CECC11A5C4C4000DD3BE3 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */; };
+		088AE2C21A6AE599008B345F /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 088AE2C11A6AE599008B345F /* iAd.framework */; };
 		088CECC31A5C4C7200DD3BE3 /* PlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */; };
 		08A767081A5BAF0A0010BEC4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A767071A5BAF0A0010BEC4 /* AppDelegate.swift */; };
 		08A7670A1A5BAF0A0010BEC4 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 08A767091A5BAF0A0010BEC4 /* GameScene.sks */; };
@@ -34,7 +34,7 @@
 
 /* Begin PBXFileReference section */
 		08493D1E1A64DAF5007EC0F7 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
-		088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		088AE2C11A6AE599008B345F /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayScene.swift; sourceTree = "<group>"; };
 		08A767021A5BAF0A0010BEC4 /* TappingGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TappingGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		08A767061A5BAF0A0010BEC4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -57,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				088AE2C21A6AE599008B345F /* iAd.framework in Frameworks */,
 				08D7F8A51A657E2E00ACE67B /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,9 +110,9 @@
 		08A767051A5BAF0A0010BEC4 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				088AE2C11A6AE599008B345F /* iAd.framework */,
 				08D7F8AA1A66063E00ACE67B /* GCHelper.swift */,
 				08D7F8A41A657E2E00ACE67B /* GameKit.framework */,
-				088CECC01A5C4C4000DD3BE3 /* UIColorExtension.swift */,
 				08A767061A5BAF0A0010BEC4 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -247,7 +248,6 @@
 				08A7670E1A5BAF0A0010BEC4 /* GameViewController.swift in Sources */,
 				08A767081A5BAF0A0010BEC4 /* AppDelegate.swift in Sources */,
 				08493D1F1A64DAF5007EC0F7 /* GameOverScene.swift in Sources */,
-				088CECC11A5C4C4000DD3BE3 /* UIColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import iAd
 
 extension SKNode {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
@@ -25,14 +26,16 @@ extension SKNode {
     }
 }
 
-class GameViewController: UIViewController {
-
+class GameViewController: UIViewController, ADBannerViewDelegate {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.canDisplayBannerAds = false
 
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
             // Configure the view.
-            let skView = self.view as SKView
+            let skView = self.originalContentView as SKView
             skView.showsFPS = true
             skView.showsNodeCount = true
             
@@ -68,5 +71,25 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    // AdBannerViewDelegate functions
+    
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(1)
+        banner.alpha = 1
+        UIView.commitAnimations()
+    }
+    
+    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
+        return willLeave
+    }
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(1)
+        banner.alpha = 0
+        UIView.commitAnimations()
     }
 }

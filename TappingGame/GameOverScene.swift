@@ -16,6 +16,8 @@ class GameOverScene: SKScene {
     var leaderBoardsButton = SKSpriteNode(imageNamed: "LeaderboardsButton")
     var viewController: UIViewController!
     
+    var iPhoneModel: Int!
+    
     override func didMoveToView(view: SKView) {
         // Play button
         playButton.position = CGPointMake(CGRectGetMidX(self.frame), CGRectGetMinY(self.frame) + playButton.size.height)
@@ -28,8 +30,7 @@ class GameOverScene: SKScene {
         // Set viewController as root view controller
         viewController = self.view?.window?.rootViewController
         
-        self.backgroundColor = UIColor(rgba: "#81D8FF")
-        
+        self.backgroundColor = UIColor.lightGrayColor()
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -41,9 +42,18 @@ class GameOverScene: SKScene {
                 skView.ignoresSiblingOrder = true
                 scene.scaleMode = .ResizeFill
                 scene.size = skView.bounds.size
+                // :'(
+                scene.iPhoneModel = self.iPhoneModel
                 
                 let sceneTransition = SKTransition.revealWithDirection(SKTransitionDirection.Up, duration: 0.5)
+                // Add some type of fade out transition
                 skView.presentScene(scene, transition: sceneTransition)
+                
+                // Remove all children while transitioning
+                let delay = SKAction.waitForDuration(0.2)
+                let removeAll = SKAction.runBlock({self.removeAllChildren()})
+                self.runAction(SKAction.sequence([delay, removeAll]))
+                self.removeAllActions()
             }
             else if self.nodeAtPoint(location) == leaderBoardsButton {
                 GCHelper.sharedInstance.showGameCenter(viewController, viewState: GKGameCenterViewControllerState.Leaderboards)

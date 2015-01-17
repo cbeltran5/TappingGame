@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import iAd
 
 // Four unique masks to identify the bodies that come into contact
 enum ColliderType:UInt32 {
@@ -17,21 +18,22 @@ enum ColliderType:UInt32 {
     case Platform = 0b010
 }
 
-class PlayScene: SKScene, SKPhysicsContactDelegate {
+class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate {
     
     var increaseDifficulty1 = true
     var increaseDifficulty2 = true
     var increaseDifficulty3 = true
     
     var player = SKSpriteNode(imageNamed: "player")
+    var platformTexture = SKTexture(imageNamed: "platform-1")
     var bottom = SKSpriteNode()
     var grid = SKNode()
     var scoreLabel = SKLabelNode()
-    var kFirstPathX = CGFloat()
+    var iPhoneModel: Int!
     
+    var kFirstPathX = CGFloat()
     var kSecondPathX = CGFloat()
     var playerPositionX = CGFloat()
-    var gap = CGFloat(14)
     
     var highScore = 0
     var defaults = NSUserDefaults()
@@ -42,19 +44,25 @@ class PlayScene: SKScene, SKPhysicsContactDelegate {
     override func didMoveToView(view: SKView) {
         
         // Set up background
-        self.backgroundColor = UIColor.lightGrayColor()
-//        var background = SKSpriteNode(imageNamed: "background")
-//        background.position = CGPointMake(self.size.width / 2, self.size.height / 2)
-//        background.zPosition = -100
-//        self.addChild(background)
+        var background: SKSpriteNode!
+        if iPhoneModel == 4  || iPhoneModel == 5 {
+            background = SKSpriteNode(imageNamed: String(format: "background-%d", iPhoneModel))
+        }
+        else {
+            background = SKSpriteNode(imageNamed: "background")
+        }
         
-        // Grid node in charge of all other moving sprites
-        self.addChild(grid)
+        background.position = CGPointMake(self.size.width / 2, self.size.height / 2)
+        background.zPosition = -100
+        self.addChild(background)
         
-        // Setup the initial play scene with some platforms alreay on the screen
+        // Setup the initial play scene with some platforms alreay on the screen, and the player
         let addAndMove = SKAction.runBlock({ self.setup() })
         let addAndMove7 = SKAction.repeatAction(addAndMove, count: 7)
         self.runAction(addAndMove7)
+        
+        // Grid node in charge of all other moving sprites
+        self.addChild(grid)
         
         // To remove any platform or enemy that goes off screen
         self.initializeBottom()
@@ -130,11 +138,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate {
     func movePlatforms(children: [AnyObject]) {
         for child in children {
             let thisSprite = child as SKSpriteNode
-            var newPosition = CGPointMake(thisSprite.position.x, thisSprite.position.y - thisSprite.size.height - gap)
+            var newPosition = CGPointMake(thisSprite.position.x, thisSprite.position.y - thisSprite.size.height - (thisSprite.size.height * 0.2))
             thisSprite.position = newPosition
         }
     }
     
+    // Moves player based on where the user touches
     func movePlayer(touches: NSSet) {
         for touch in touches {
             let thisPosition:CGPoint = touch.locationInNode(self)
@@ -192,11 +201,13 @@ class PlayScene: SKScene, SKPhysicsContactDelegate {
         var scene = GameOverScene(size: self.size)
         let skView = self.view as SKView!
         skView?.ignoresSiblingOrder = true
-        scene.size = self.frame.size
+        scene.scaleMode = .ResizeFill
+        scene.size = skView.bounds.size
+        scene.iPhoneModel = self.iPhoneModel
         let transition = SKTransition.moveInWithDirection(SKTransitionDirection.Up, duration: 0.5)
         skView.presentScene(scene, transition: transition)
         
-        // Remove all childrena and actions from the scene
+        // Remove all children and actions from the scene
         let delay = SKAction.waitForDuration(1.0)
         let deallocAction = SKAction.runBlock({ self.deallocate() })
         self.runAction(SKAction.sequence([delay, deallocAction]))
@@ -284,11 +295,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate {
             rightSprite.physicsBody?.contactTestBitMask = ColliderType.Bottom.rawValue
             rightSprite.physicsBody?.collisionBitMask = 0
             grid.addChild(rightSprite)
+            
         }
     }
     
     func initializePlayer() {
-        player.position = CGPointMake(kFirstPathX, (self.frame.height * 0.18))
+        player.position = CGPointMake(kFirstPathX, getBottomPlatformY(platformTexture.size().height))
         player.physicsBody = SKPhysicsBody(rectangleOfSize: player.size)
         player.name = "Player"
         player.physicsBody?.affectedByGravity = false
@@ -308,6 +320,14 @@ class PlayScene: SKScene, SKPhysicsContactDelegate {
         bottom.physicsBody?.contactTestBitMask = ColliderType.Platform.rawValue | ColliderType.Death.rawValue
         bottom.physicsBody?.collisionBitMask = 0
         self.addChild(bottom)
+    }
+    
+    func getBottomPlatformY(size: CGFloat) -> CGFloat {
+        var yPosition = CGRectGetMaxY(self.frame) + (size/2)
+        while (yPosition - size - (size * 0.2) - (size/2) > 0) {
+            yPosition -= size - (size * 0.2) - (size/2)
+        }
+        return yPosition
     }
     
     // Returns a random image name for a platform

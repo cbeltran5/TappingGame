@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "442988584.89317"
+            timestampString = "443214358.909682"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "65"
-            endingLineNumber = "65"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
             landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "442990585.568732"
+            timestampString = "443214358.909682"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
+            startingLineNumber = "164"
+            endingLineNumber = "164"
             landmarkName = "setup()"
             landmarkType = "5">
          </BreakpointContent>
