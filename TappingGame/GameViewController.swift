@@ -17,7 +17,7 @@ extension SKNode {
             var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
             
             archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as GameScene
+            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as PlayScene
             archiver.finishDecoding()
             return scene
         } else {
@@ -28,28 +28,64 @@ extension SKNode {
 
 class GameViewController: UIViewController, ADBannerViewDelegate {
     
+    var bannerView: ADBannerView = ADBannerView()
+    
+    func appDelegate() -> AppDelegate {
+        return UIApplication.sharedApplication().delegate as AppDelegate
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        //println("Called viewWillAppear")
+        bannerView.delegate = self
+        bannerView = self.appDelegate().adBannerView
+        bannerView.frame = CGRectMake(0, 0, 0, 0)
+        self.view.addSubview(bannerView)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        //println("Called viewWillDisappear")
+        bannerView.delegate = nil
+        bannerView.removeFromSuperview()
+    }
+    
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        //println("Called bannerViewDidLoad")
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(1)
+        bannerView.alpha = 1
+        UIView.commitAnimations()
+    }
+    
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        //println("failed")
+        UIView.beginAnimations(nil, context: nil)
+        UIView.setAnimationDuration(0)
+        bannerView.alpha = 1
+        UIView.commitAnimations()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        let scene = PlayScene()
+        // Configure the view.
+        let skView = self.originalContentView as SKView
+        skView.showsFPS = true
+        skView.showsNodeCount = true
         
-        self.canDisplayBannerAds = false
-
-        if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-            // Configure the view.
-            let skView = self.originalContentView as SKView
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = true
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
-            
-            // Set the view controller of the play scene to self to present leaderboards
-            scene.viewController = self
-            
-            skView.presentScene(scene)
-        }
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+        
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .AspectFill
+        scene.size = skView.bounds.size
+        
+        // Set the view controller of the play scene to self to present leaderboards
+        scene.viewController = self
+        
+        // Might need this to call a function to save settings
+        appDelegate().viewController = self
+        
+        skView.presentScene(scene)
     }
 
     override func shouldAutorotate() -> Bool {
@@ -71,25 +107,5 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
-    }
-    
-    // AdBannerViewDelegate functions
-    
-    func bannerViewDidLoadAd(banner: ADBannerView!) {
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(1)
-        banner.alpha = 1
-        UIView.commitAnimations()
-    }
-    
-    func bannerViewActionShouldBegin(banner: ADBannerView!, willLeaveApplication willLeave: Bool) -> Bool {
-        return willLeave
-    }
-    
-    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(1)
-        banner.alpha = 0
-        UIView.commitAnimations()
     }
 }
