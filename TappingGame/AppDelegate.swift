@@ -13,7 +13,7 @@ import iAd
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var adBannerView = ADBannerView()
+    //var adBannerView: ADBannerView!
     var viewController: UIViewController!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {

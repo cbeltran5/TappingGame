@@ -28,44 +28,40 @@ extension SKNode {
 
 class GameViewController: UIViewController, ADBannerViewDelegate {
     
-    var bannerView: ADBannerView = ADBannerView()
+    var bannerView: ADBannerView!
     
     func appDelegate() -> AppDelegate {
         return UIApplication.sharedApplication().delegate as AppDelegate
     }
     
     override func viewWillAppear(animated: Bool) {
-        //println("Called viewWillAppear")
+        bannerView = ADBannerView(adType: .Banner)
         bannerView.delegate = self
-        bannerView = self.appDelegate().adBannerView
+        bannerView.hidden = true
+        //appDelegate().adBannerView = bannerView
         bannerView.frame = CGRectMake(0, 0, 0, 0)
         self.view.addSubview(bannerView)
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        //println("Called viewWillDisappear")
-        bannerView.delegate = nil
-        bannerView.removeFromSuperview()
-    }
-    
     func bannerViewDidLoadAd(banner: ADBannerView!) {
-        //println("Called bannerViewDidLoad")
+        println("Called bannerViewDidLoadAd")
+        bannerView.hidden = false
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(1)
-        bannerView.alpha = 1
         UIView.commitAnimations()
     }
     
     func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
-        //println("failed")
+        println("Called didFail...")
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(0)
-        bannerView.alpha = 1
         UIView.commitAnimations()
+        bannerView.hidden = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let scene = PlayScene()
         // Configure the view.
         let skView = self.originalContentView as SKView

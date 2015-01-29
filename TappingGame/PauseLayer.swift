@@ -18,12 +18,42 @@ protocol PauseLayerDelegate {
 class PauseLayer: SKSpriteNode {
     
     var resumeButton: SKSpriteNode!
-    var muteMusicButton: SKSpriteNode!
+    var musicButton: SKSpriteNode!
     var muteEffectsButton: SKSpriteNode!
+    var musicLabel: SKSpriteNode!
     var delegate: PauseLayerDelegate?
+    var defaults = NSUserDefaults()
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
+    }
+
+    convenience init(typeofLayer: String, texture: SKTexture!, color: UIColor!, size: CGSize) {
+        self.init(texture: texture, color: color, size: size)
+        
+        resumeButton = SKSpriteNode(imageNamed: "resumeButton")
+        resumeButton.position = CGPointMake(0, -self.size.height/2 + resumeButton.size.height)
+        resumeButton.zPosition = 100
+        self.addChild(resumeButton)
+        
+        musicLabel = SKSpriteNode(imageNamed: "musicLabel")
+        musicLabel.position = CGPointMake(-musicLabel.size.width/2, musicLabel.size.height)
+        musicLabel.zPosition = 100
+        self.addChild(musicLabel)
+        
+        let musicIsMuted = defaults.boolForKey("musicIsMuted")
+        if musicIsMuted == true {
+            musicButton = SKSpriteNode(imageNamed: "muteImage")
+            musicButton.position = CGPointMake(musicButton.size.width, musicLabel.position.y)
+            musicButton.zPosition = 100
+            self.addChild(musicButton)
+        }
+        else {
+            musicButton = SKSpriteNode(imageNamed: "notMuteImage")
+            musicButton.position = CGPointMake(musicButton.size.width, musicLabel.position.y)
+            musicButton.zPosition = 100
+            self.addChild(musicButton)
+        }
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -32,7 +62,7 @@ class PauseLayer: SKSpriteNode {
             if self.nodeAtPoint(thisPosition) == self.resumeButton {
                 self.delegate?.resumeButtonPressed()
             }
-            else if self.nodeAtPoint(thisPosition) == muteMusicButton {
+            else if self.nodeAtPoint(thisPosition) == musicButton {
                 self.delegate?.muteMusicButtonPressed()
             }
         }
