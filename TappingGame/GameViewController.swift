@@ -29,6 +29,7 @@ extension SKNode {
 class GameViewController: UIViewController, ADBannerViewDelegate {
     
     var bannerView: ADBannerView!
+    var scene: PlayScene!
     
     func appDelegate() -> AppDelegate {
         return UIApplication.sharedApplication().delegate as AppDelegate
@@ -38,7 +39,6 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         bannerView = ADBannerView(adType: .Banner)
         bannerView.delegate = self
         bannerView.hidden = true
-        //appDelegate().adBannerView = bannerView
         bannerView.frame = CGRectMake(0, 0, 0, 0)
         self.view.addSubview(bannerView)
     }
@@ -46,6 +46,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         println("Called bannerViewDidLoadAd")
         bannerView.hidden = false
+        banner.hidden = false
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(1)
         UIView.commitAnimations()
@@ -56,17 +57,18 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(0)
         UIView.commitAnimations()
+        banner.hidden = true
         bannerView.hidden = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scene = PlayScene()
-        // Configure the view.
-        let skView = self.originalContentView as SKView
-        skView.showsFPS = true
-        skView.showsNodeCount = true
+        scene = PlayScene()
+        let skView = self.view as SKView
+        
+        skView.showsFPS = false
+        skView.showsNodeCount = false
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
@@ -103,5 +105,11 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    func fullScreenAd() {
+        if self.requestInterstitialAdPresentation() == true {
+            println("ad loaded")
+        }
     }
 }

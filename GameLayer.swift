@@ -13,6 +13,7 @@ protocol GameLayerDelegate {
     func playButtonPressed()
     func leaderboardsButtonPressed()
     func twitterButtonPressed()
+    func storeButtonPressed()
 }
 
 class GameLayer: SKSpriteNode {
@@ -31,7 +32,7 @@ class GameLayer: SKSpriteNode {
     convenience init(typeofLayer: String, texture: SKTexture!, color: UIColor!, size: CGSize) {
         
         if typeofLayer == "GameStart" {
-            self.init(texture: nil, color: color, size: size) }
+            self.init(texture: texture, color: color, size: size) }
         else {
             self.init(texture: texture, color: color, size: size) }
         layerType = typeofLayer
@@ -60,6 +61,9 @@ class GameLayer: SKSpriteNode {
             }
             else if self.nodeAtPoint(thisPosition) == leaderboardsButton {
                 delegate?.leaderboardsButtonPressed()
+            }
+            else if self.nodeAtPoint(thisPosition) == storeButton {
+                delegate?.storeButtonPressed()
             }
             else if layerType == "GameOver" && self.nodeAtPoint(thisPosition) == twitterButton {
                 delegate?.twitterButtonPressed()

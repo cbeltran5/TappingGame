@@ -26,13 +26,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
-            landmarkName = "setup()"
-            landmarkType = "5">
+            startingLineNumber = "278"
+            endingLineNumber = "278"
+            landmarkName = "PlayScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -160,11 +160,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445927571.639628"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "515"
-            endingLineNumber = "515"
+            startingLineNumber = "643"
+            endingLineNumber = "643"
             landmarkName = "PlayScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -176,11 +176,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444114443.168752"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "PlayScene"
             landmarkType = "3">
             <Locations>
@@ -278,12 +278,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
-            landmarkName = "movePlatforms(_:)"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
+            landmarkName = "PlayScene"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "445925876.784288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "444"
+            endingLineNumber = "444"
+            landmarkName = "spawnSomething()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -294,12 +310,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445927571.639628"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "377"
-            endingLineNumber = "377"
-            landmarkName = "initializePlayer()"
+            startingLineNumber = "656"
+            endingLineNumber = "656"
+            landmarkName = "update(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -310,12 +326,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "528"
-            endingLineNumber = "528"
-            landmarkName = "twitterButtonPressed()"
+            startingLineNumber = "449"
+            endingLineNumber = "449"
+            landmarkName = "beginGame()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -326,12 +342,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "444119201.965883"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "382"
-            endingLineNumber = "382"
-            landmarkName = "initializePlayer()"
+            startingLineNumber = "15"
+            endingLineNumber = "15"
+            landmarkName = "String"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "445925876.784288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
+            landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -342,11 +374,77 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "443934604.242613"
+            timestampString = "445925876.784288"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "14"
-            endingLineNumber = "14">
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "didMoveToView(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "445925876.784288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
+            landmarkName = "didMoveToView(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/GameViewController.swift"
+            timestampString = "445842717.792281"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "viewDidLoad()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/BitmapFontLabel.swift"
+            timestampString = "445762611.634083"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "updateText()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "445925876.784288"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "521"
+            endingLineNumber = "521"
+            landmarkName = "setupAllAudio()"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
