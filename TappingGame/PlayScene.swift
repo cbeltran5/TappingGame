@@ -92,14 +92,18 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     var backgroundMusic = AVAudioPlayer()
     var introMusic = AVAudioPlayer()
+    var demoMusic = AVAudioPlayer()
     var sideStep = AVAudioPlayer()
     var deathSound = AVAudioPlayer()
     
     var storeItems: [StoreObject] = []
+    var storeDictionary = [String: StoreObject]()
     
     override func didMoveToView(view: SKView) {
         
         userInteractionEnabled = false
+        
+        setupStoreObjects()
         
         let setupPlatforms = SKAction.runBlock({ self.setup_platforms() })
         let setupPlayer = SKAction.runBlock({ self.initializePlayer() })
@@ -139,9 +143,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
             tapFrames.append(texture)
         }
         
-        // TODO: Setup the dictionary of options for the storelayer
-        setupStoreObjects()
-        
+        // This might fail
         setupAllAudio()
         
         presentGameStartLayer(false)
@@ -515,12 +517,15 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     func setupAllAudio() {
         var songChoice = defaults.stringForKey("songChoice")
         if songChoice == nil {
-            songChoice = "Song-2"
+            songChoice = "Song-1"
+            defaults.setValue(songChoice, forKey: "songChoice")
         }
+        
         var stringLength = countElements(songChoice!)
         var introString: String = String(format: "Intro-%@", songChoice![stringLength - 1])
         
         backgroundMusic = self.setupAudioPlayerWithFile(songChoice!, type: "aifc")
+        backgroundMusic.numberOfLoops = -1
         backgroundMusic.volume = 0.05
         
         introMusic = self.setupAudioPlayerWithFile(introString, type: "aifc")
@@ -528,10 +533,42 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         introMusic.volume = 0.05
         
         sideStep = self.setupAudioPlayerWithFile("Step-3", type: "caf")
-        sideStep.volume = 0.3
+        sideStep.volume = 0.25
         
         deathSound = self.setupAudioPlayerWithFile("Death-2", type: "caf")
-        deathSound.volume = 0.4
+        deathSound.volume = 0.3
+    }
+    
+    // Update the canSelect property for each item in the storeDictionary
+    // Essentially, if it's not the one currently selected and it's not coming soon,
+    // the user can select it.
+    func updateAllChoices(currentlySelected: String) {
+        for item in storeDictionary {
+            if item.0 != currentlySelected && item.0 != "coming_soon" {
+                item.1.canSelect = true
+            }
+            else if item.0 == currentlySelected {
+                storeDictionary[currentlySelected]?.canSelect = false
+            }
+        }
+    }
+    
+    // Updates the audio based on the user's new song selection
+    func updateAudio(newSong: String) {
+        backgroundMusic = self.setupAudioPlayerWithFile(newSong, type: "aifc")
+        backgroundMusic.numberOfLoops = -1
+        backgroundMusic.volume = 0.05
+        
+        var stringLength = countElements(newSong)
+        var introString: String = String(format: "Intro-%@", newSong[stringLength - 1])
+        
+        introMusic = self.setupAudioPlayerWithFile(introString, type: "aifc")
+        introMusic.numberOfLoops = -1
+        introMusic.volume = 0.05
+        
+        if musicIsMuted == false {
+            introMusic.play()
+        }
     }
     
     // Helper function that returns the avaudioplayer we specify
@@ -547,7 +584,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     // Sets up the meter, the pause button, and the label for the score
     func setupPlayInterface() {
         
-        scoreLabel = BitMapFontLabel(text: "0", fontName: "number-")
+        scoreLabel = BitMapFontLabel(text: "0", fontName: "number-", usingAtlas: "number")
         scoreLabel.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.height * 0.7)
         scoreLabel.setScale(1.25)
         self.addChild(scoreLabel)
@@ -774,26 +811,51 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         gameStoreLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.maxY + gameStoreLayer.size.height/2)
         gameStoreLayer.zPosition = 100
         gameStoreLayer.userInteractionEnabled = true
-        gameStoreLayer.storeItems = self.storeItems
         self.addChild(gameStoreLayer)
         
         let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.minY + gameStoreLayer.size.height * 0.65, duration: 0.4)
-        gameStoreLayer.runAction(moveDown)
+        gameStoreLayer.runAction(SKAction.sequence([SKAction.runBlock({ self.gameStoreLayer.storeItems = self.storeItems }), SKAction.runBlock({ self.gameStoreLayer.updateDisplay(0) }), moveDown]))
     }
     
     // Dismisses the game store layer and presents the layer the user was in
     func selectButtonPressed(newChoice: String) {
         
-        // save settings and return to game start layer
+        // Set the canSelect properties of the old selection and the new one
+        storeDictionary[newChoice]?.canSelect = false
+        
+        var oldChoice = defaults.stringForKey("songChoice")
+        storeDictionary[oldChoice!]?.canSelect = true
+        
+        // save settings
         defaults.setValue(newChoice, forKey: "songChoice")
         
+        // start new song
+        updateAudio(newChoice)
+        
         dismissLayer(gameStoreLayer)
-        if game_started == false {
-            presentGameStartLayer(true)
-        }
-        else {
-            presentGameOverLayer()
-        }
+//        if game_started == false {
+//            presentGameStartLayer(true)
+//        }
+//        else {
+//            presentGameOverLayer()
+//        }
+        
+        game_started = false
+        game_ended = false
+        fadeInFadeOut()
+        let resetScene = SKAction.runBlock({ self.resetScene() })
+        let delay = SKAction.waitForDuration(0.2)
+        self.runAction(SKAction.sequence([delay, resetScene]))
+        presentGameStartLayer(true)
+    }
+    
+    // Lets the user briefly listen to whatever object they chose
+    func listenButtonPressed(choice: String) {
+        demoMusic.stop()
+        demoMusic.currentTime = 0.0
+        demoMusic = setupAudioPlayerWithFile(choice, type: "aifc")
+        demoMusic.volume = 0.4
+        demoMusic.play()
     }
     
     // Presents a pause screen when the user presses the pause button
@@ -976,9 +1038,10 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         }
     }
     
+    // Setup the array of Store objects, as well as a dictionary for us to make any quick changes
     func setupStoreObjects() {
-        var song_one = StoreObject(key: "song_one", name: "Song One", preRequisite: "Nothing to show here")
-        var song_two = StoreObject(key: "song_two", name: "Song Two", preRequisite: "Score > 300 or RATE")
+        var song_one = StoreObject(key: "Song-1", name: "Song One", preRequisite: "Nothing to show here")
+        var song_two = StoreObject(key: "Song-2", name: "Song Two", preRequisite: "Score > 300 or RATE")
         var coming_soon = StoreObject(key: "coming_soon", name: "Coming Soon!", preRequisite: "Nothing to show here")
         
         song_one.isUnlocked = true
@@ -989,5 +1052,9 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         storeItems.append(song_one)
         storeItems.append(song_two)
         storeItems.append(coming_soon)
+        
+        storeDictionary["Song-1"] = song_one
+        storeDictionary["Song-2"] = song_two
+        storeDictionary["coming_soon"] = coming_soon
     }
 }

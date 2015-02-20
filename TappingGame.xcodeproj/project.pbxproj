@@ -12,6 +12,8 @@
 		0815EC161A737FC600B351FF /* player-right.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 0815EC151A737FC600B351FF /* player-right.atlas */; };
 		0815EC181A7429CB00B351FF /* player-jump.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 0815EC171A7429CB00B351FF /* player-jump.atlas */; };
 		083453BF1A7F40A9007CF60C /* StoreLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083453BE1A7F40A9007CF60C /* StoreLayer.swift */; };
+		0854AB111A96CE76007680BA /* Song-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 0854AB0E1A96CE76007680BA /* Song-1.aifc */; };
+		0854AB131A96CE76007680BA /* Intro-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 0854AB101A96CE76007680BA /* Intro-1.aifc */; };
 		088AE2C21A6AE599008B345F /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 088AE2C11A6AE599008B345F /* iAd.framework */; };
 		088AE2CE1A6B7363008B345F /* GameLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AE2CD1A6B7363008B345F /* GameLayer.swift */; };
 		088CECC31A5C4C7200DD3BE3 /* PlayScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */; };
@@ -54,6 +56,9 @@
 		0815EC151A737FC600B351FF /* player-right.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = "player-right.atlas"; sourceTree = "<group>"; };
 		0815EC171A7429CB00B351FF /* player-jump.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = "player-jump.atlas"; sourceTree = "<group>"; };
 		083453BE1A7F40A9007CF60C /* StoreLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreLayer.swift; sourceTree = "<group>"; };
+		0854AB0E1A96CE76007680BA /* Song-1.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Song-1.aifc"; sourceTree = "<group>"; };
+		0854AB101A96CE76007680BA /* Intro-1.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Intro-1.aifc"; sourceTree = "<group>"; };
+		0854AB141A96CE9E007680BA /* Death-3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Death-3.caf"; sourceTree = "<group>"; };
 		088AE2C11A6AE599008B345F /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		088AE2CD1A6B7363008B345F /* GameLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLayer.swift; path = ../GameLayer.swift; sourceTree = "<group>"; };
 		088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayScene.swift; sourceTree = "<group>"; };
@@ -108,6 +113,9 @@
 		0898F2411A75EB0500CC163D /* Audio */ = {
 			isa = PBXGroup;
 			children = (
+				0854AB141A96CE9E007680BA /* Death-3.caf */,
+				0854AB0E1A96CE76007680BA /* Song-1.aifc */,
+				0854AB101A96CE76007680BA /* Intro-1.aifc */,
 				08B24E4B1A94403200C389A8 /* Death-1.caf */,
 				08B24E4C1A94403200C389A8 /* Death-2.caf */,
 				08B24E4D1A94403200C389A8 /* Intro-2.aifc */,
@@ -279,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08B24E501A944C1000C389A8 /* Death-1.caf in Resources */,
+				0854AB111A96CE76007680BA /* Song-1.aifc in Resources */,
 				08B24E511A944C1000C389A8 /* Death-2.caf in Resources */,
 				08B24E521A944C1000C389A8 /* Intro-2.aifc in Resources */,
 				08B24E531A944C1000C389A8 /* Song-2.aifc in Resources */,
@@ -293,6 +302,7 @@
 				08A7670A1A5BAF0A0010BEC4 /* GameScene.sks in Resources */,
 				08A767111A5BAF0A0010BEC4 /* Main.storyboard in Resources */,
 				0815EC121A737AB500B351FF /* player-still.atlas in Resources */,
+				0854AB131A96CE76007680BA /* Intro-1.aifc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

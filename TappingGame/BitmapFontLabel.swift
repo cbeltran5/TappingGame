@@ -14,16 +14,18 @@ class BitMapFontLabel: SKNode {
     var fontName = NSString()
     var text = NSString()
     var letterSpacing: CGFloat!
+    var atlasUsed = NSString()
     
     override init() {
         super.init()
     }
     
-    convenience init(text: NSString, fontName: NSString) {
+    convenience init(text: NSString, fontName: NSString, usingAtlas: NSString) {
         self.init()
         self.fontName = fontName
         self.text = text
         self.letterSpacing = 2.0
+        self.atlasUsed = usingAtlas
         self.updateText()
     }
     
@@ -58,7 +60,7 @@ class BitMapFontLabel: SKNode {
         
         var pos = CGPointZero
         var totalSize = CGSizeZero
-        var atlas = SKTextureAtlas(named: "number")
+        var atlas = SKTextureAtlas(named: atlasUsed)
         
         // Loop through all characters in text.
         for var i = 0; i < self.text.length; i++ {
