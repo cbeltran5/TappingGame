@@ -15,6 +15,7 @@ class BitMapFontLabel: SKNode {
     var text = NSString()
     var letterSpacing: CGFloat!
     var atlasUsed = NSString()
+    var atlas: SKTextureAtlas!
     
     override init() {
         super.init()
@@ -26,6 +27,7 @@ class BitMapFontLabel: SKNode {
         self.text = text
         self.letterSpacing = 2.0
         self.atlasUsed = usingAtlas
+        atlas = SKTextureAtlas(named: atlasUsed)
         self.updateText()
     }
     
@@ -60,13 +62,14 @@ class BitMapFontLabel: SKNode {
         
         var pos = CGPointZero
         var totalSize = CGSizeZero
-        var atlas = SKTextureAtlas(named: atlasUsed)
         
         // Loop through all characters in text.
         for var i = 0; i < self.text.length; i++ {
+            
             // Get character in text for current position in loop.
             var c = self.text.characterAtIndex(i)
             var textureName = String(format: "%@%C", self.fontName, c)
+            
             var letter = SKSpriteNode()
             
             if i < self.children.count {

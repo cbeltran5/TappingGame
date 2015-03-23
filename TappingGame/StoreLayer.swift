@@ -24,46 +24,46 @@ class StoreLayer: SKSpriteNode {
     var storeItems: [StoreObject]!
     var currentIndex = 0
     
-    var nameLabel = SKLabelNode()
-    var nameLabelShadow = SKLabelNode()
-    var imageLabel = UIImageView()
-    var preReqLabel = SKLabelNode()
+    var nameLabel: SKSpriteNode!
+    var preReqLabel: SKSpriteNode!
     
     var delegate: StoreLayerDelegate?
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
-        
-        nameLabel = SKLabelNode(fontNamed: "DINAlternate-Bold")
-        nameLabel.horizontalAlignmentMode = .Center
-        nameLabel.fontColor = UIColor.whiteColor()
-        nameLabel.zPosition = 50
-        nameLabel.position = CGPointMake(0, 0)
-        self.addChild(nameLabel)
-        
-        nameLabelShadow = SKLabelNode(fontNamed: "DINAlternate-Bold")
-        nameLabelShadow.horizontalAlignmentMode = .Center
-        nameLabelShadow.fontColor = UIColor.blackColor()
-        nameLabelShadow.position = CGPointMake(0, nameLabel.position.y - 3)
-        self.addChild(nameLabelShadow)
+        super.init(texture: nil, color: color, size: size)
         
         selectButton = SKSpriteNode(imageNamed: "selectButton")
-        selectButton.position = CGPointMake(0, -(self.size.height / 2) - selectButton.size.height * 0.7)
+        selectButton.position = CGPointMake(0, -(UIScreen.mainScreen().bounds.height/2) + selectButton.size.height/2 + 10)
         selectButton.zPosition = 100
         self.addChild(selectButton)
         
+        var layer = SKSpriteNode(texture: texture)
+        layer.position = CGPointMake(0, self.position.y + selectButton.size.height * 0.4)
+        layer.zPosition = 100
+        self.addChild(layer)
+        
+        nameLabel = SKSpriteNode(imageNamed: "track-1")
+        nameLabel.position = CGPointMake(0, layer.frame.maxY - nameLabel.size.height * 3.8)
+        nameLabel.zPosition = 115
+        self.addChild(nameLabel)
+        
+        preReqLabel = SKSpriteNode(imageNamed: "unlocked")
+        preReqLabel.position = CGPointMake(0, nameLabel.position.y - nameLabel.size.height * 3)
+        preReqLabel.zPosition = 115
+        self.addChild(preReqLabel)
+        
         listenButton = SKSpriteNode(imageNamed: "listenButton")
         listenButton.zPosition = 100
-        listenButton.position = CGPointMake(0, selectButton.position.y + selectButton.size.height * 2)
+        listenButton.position = CGPointMake(0, layer.frame.minY + listenButton.size.height + 10)
         self.addChild(listenButton)
         
         leftButton = SKSpriteNode(imageNamed: "leftButton")
-        leftButton.position = CGPointMake(0 - (self.size.width / 2) + (leftButton.size.width / 2), selectButton.position.y)
+        leftButton.position = CGPointMake(selectButton.frame.minX - leftButton.size.width, selectButton.position.y)
         leftButton.zPosition = 100
         self.addChild(leftButton)
         
         rightButton = SKSpriteNode(imageNamed: "rightButton")
-        rightButton.position = CGPointMake(0 + (self.size.width / 2) - (rightButton.size.width / 2), selectButton.position.y)
+        rightButton.position = CGPointMake(selectButton.frame.maxX + rightButton.size.width, selectButton.position.y)
         rightButton.zPosition = 100
         self.addChild(rightButton)
     }
@@ -73,6 +73,10 @@ class StoreLayer: SKSpriteNode {
             let thisPosition = touch.locationInNode(self)
             if self.nodeAtPoint(thisPosition) == selectButton && selectButton.hidden == false {
                 self.delegate?.selectButtonPressed(storeItems[currentIndex].key)
+            }
+            else if self.nodeAtPoint(thisPosition) == listenButton && listenButton.hidden == false {
+                self.delegate?.listenButtonPressed(storeItems[currentIndex].key)
+                listenButton.hidden = true
             }
             else if self.nodeAtPoint(thisPosition) == leftButton && leftButton.hidden == false {
                 updateDisplay(-1)
@@ -104,24 +108,56 @@ class StoreLayer: SKSpriteNode {
             leftButton.hidden = false
             rightButton.hidden = false
         }
-        
-        // TODO:: retrieve the object's info and display accordingly
+
         var currentObject = storeItems[currentIndex]
-        nameLabel.text = currentObject.name
-        nameLabelShadow.text = currentObject.name
+        
+        // Update the text to be displayed
+        updateText()
         
         // If the song is already selected, the select button should say 'Already Selected'
         if currentObject.isUnlocked == false {
             selectButton.hidden = true
-            if currentObject.canSelect == false {
+            if currentObject.key == "coming_soon" {
                 // Display 'Locked' -- coming soon
+                listenButton.hidden = true
             }
-            else if currentObject.isUnlocked == false {
+            else {
                 // Diplay 'Buy' or 'Locked'
+                listenButton.hidden = false
+                
             }
         }
         else {
             selectButton.hidden = false
+            listenButton.hidden = true
+        }
+    }
+    
+    func updateText() {
+        var currentObject = storeItems[currentIndex]
+        
+        if currentObject.key == "coming_soon" {
+            nameLabel.texture = SKTexture(imageNamed: "coming-soon")
+            nameLabel.size = SKTexture(imageNamed: "coming-soon").size()
+            preReqLabel.hidden = true
+        }
+        else {
+            var stringLength = countElements(currentObject.key)
+            var nameString: String = String(format: "track-%@", currentObject.key[stringLength - 1])
+            var preReqString: String = String(format: "pre-req-%@", currentObject.key[stringLength - 1])
+            
+            nameLabel.texture = SKTexture(imageNamed: nameString)
+            nameLabel.size = SKTexture(imageNamed: nameString).size()
+            
+            preReqLabel.hidden = false
+            if currentObject.isUnlocked == true {
+                preReqLabel.texture = SKTexture(imageNamed: "unlocked")
+                preReqLabel.size = SKTexture(imageNamed: "unlocked").size()
+            }
+            else {
+                preReqLabel.texture = SKTexture(imageNamed: preReqString)
+                preReqLabel.size = SKTexture(imageNamed: preReqString).size()
+            }
         }
     }
 

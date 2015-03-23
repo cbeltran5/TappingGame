@@ -21,9 +21,9 @@ class Meter: SKSpriteNode {
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
-        count = 10
+        count = 12
         
-        for var i = 1; i < 12; i++ {
+        for var i = 1; i < 14; i++ {
             textureArray.append(SKTexture(imageNamed: String(format: "meter-%d", i)))
         }
     }
@@ -41,28 +41,32 @@ class Meter: SKSpriteNode {
     // when count reaches 0
     func checkTimer() {
         switch count {
-        case 10:
+        case 12:
             self.texture = textureArray[0]
-        case 9:
+        case 11:
             self.texture = textureArray[1]
-        case 8:
+        case 10:
             self.texture = textureArray[2]
-        case 7:
+        case 9:
             self.texture = textureArray[3]
-        case 6:
+        case 8:
             self.texture = textureArray[4]
-        case 5:
+        case 7:
             self.texture = textureArray[5]
-        case 4:
+        case 6:
             self.texture = textureArray[6]
-        case 3:
+        case 5:
             self.texture = textureArray[7]
-        case 2:
+        case 4:
             self.texture = textureArray[8]
-        case 1:
+        case 3:
             self.texture = textureArray[9]
-        case 0:
+        case 2:
             self.texture = textureArray[10]
+        case 1:
+            self.texture = textureArray[11]
+        case 0:
+            self.texture = textureArray[12]
             self.delegate?.meterRanOut()
         default:
             return
@@ -76,14 +80,14 @@ class Meter: SKSpriteNode {
     
     // reset count and the texture
     func reset() {
-        count = 10
+        count = 12
         self.removeAllActions()
         self.texture = textureArray[0]
     }
     
     // Whever the player picks up a consumable
     func addToCount() {
-        if count < 9 {
+        if count < 11 {
             count += 2
         }
         else {

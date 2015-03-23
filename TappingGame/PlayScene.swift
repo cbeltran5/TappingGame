@@ -38,7 +38,6 @@ enum ColliderType:UInt32 {
 }
 
 class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLayerDelegate, PauseLayerDelegate, StoreLayerDelegate, MeterDelegate {
-
     
     var viewController: GameViewController!
     
@@ -46,11 +45,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     var increaseDifficulty2 = true
     var increaseDifficulty3 = true
     
-    var player = SKSpriteNode(imageNamed: "player-still_01")
-    var playerStillFrames: [SKTexture] = []
-    var playerJumpLeftFrames: [SKTexture] = []
-    var playerJumpRightFrames: [SKTexture] = []
-    var playerJumpUpFrames: [SKTexture] = []
+    var player = SKSpriteNode(imageNamed: "player-still")
     
     var platformTexture = SKTexture(imageNamed: "platform-1")
     var bottom = SKNode()
@@ -60,6 +55,8 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     var kFirstPathX = CGFloat()
     var kSecondPathX = CGFloat()
+    var playerPositionY = CGFloat()
+    var stepLeft = true
     
     var highScore = 0
     var defaults = NSUserDefaults()
@@ -69,15 +66,19 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     var meterTexture = SKTexture(imageNamed: "meter-1")
     
     var difficulty = 5
+    var spawnDecider = 4
     var musicIsMuted: Bool!
     var effectsAreMuted: Bool!
     var game_started:Bool!
     var game_ended: Bool!
+    var demoMusicIsPlaying = false
     var gameStartLayer: GameLayer!
     var gameOverLayer: GameLayer!
     var gamePauseLayer: PauseLayer!
     var gameStoreLayer: StoreLayer!
-    var gameLayerTexture = SKTexture(imageNamed: "gameLayer")
+    var gameOverTexture = SKTexture(imageNamed: "gameOverLayer")
+    var gameStartTexture = SKTexture(imageNamed: "gameStartLayer")
+    var storeTexture = SKTexture(imageNamed: "storeLayer")
     var gamePauseTexture = SKTexture(imageNamed: "pauseLayer")
     var tapFrames: [SKTexture] = []
     var tapSprite2: SKSpriteNode!
@@ -95,12 +96,15 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     var demoMusic = AVAudioPlayer()
     var sideStep = AVAudioPlayer()
     var deathSound = AVAudioPlayer()
+    var popSound = AVAudioPlayer()
     
     var storeItems: [StoreObject] = []
     var storeDictionary = [String: StoreObject]()
     
+    var rateMinSessions = 3
+    var rateTryAgainSessions = 6
+    
     override func didMoveToView(view: SKView) {
-        
         userInteractionEnabled = false
         
         setupStoreObjects()
@@ -143,7 +147,6 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
             tapFrames.append(texture)
         }
         
-        // This might fail
         setupAllAudio()
         
         presentGameStartLayer(false)
@@ -151,8 +154,8 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         if musicIsMuted == false {
             introMusic.play()
         }
-        
     }
+    
     // If any two objects come into contact, this function is called.
     // If category Death and category Player come into contact, the game ends.
     // If Death OR Sprite come into contact with category Bottom, then the spritenode is removed from the parent.
@@ -161,7 +164,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         
         switch contactMask {
         case ColliderType.Death.rawValue | ColliderType.Player.rawValue:
-            died()
+            // Run an animation first
+            self.userInteractionEnabled = false
+            var dieAnimation = SKAction.animateWithTextures([SKTexture(imageNamed: "player-float")], timePerFrame: 1.0, resize: false, restore: false)
+            var fallAction = SKAction.moveToY(-(UIScreen.mainScreen().bounds.height * 0.7), duration: 0.5)
+            self.runAction(SKAction.sequence([SKAction.runBlock({ self.player.runAction(dieAnimation) }), SKAction.runBlock({ self.died() })]))
+            
         case ColliderType.Platform.rawValue | ColliderType.Bottom.rawValue:
             if contact.bodyA.categoryBitMask == ColliderType.Platform.rawValue {
                 var thisSprite = contact.bodyA.node as SKSpriteNode
@@ -182,6 +190,9 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
             }
         case ColliderType.Player.rawValue | ColliderType.Consumable.rawValue:
             meter.addToCount()
+            if effectsAreMuted == false {
+                popSound.play()
+            }
             if contact.bodyA.categoryBitMask == ColliderType.Player.rawValue {
                 var thisSprite = contact.bodyB.node as SKSpriteNode
                 thisSprite.removeFromParent()
@@ -211,20 +222,18 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         if game_started == true {
             
             if isTapDisplayed == true {
-                tapSprite1.removeFromParent()
-                tapSprite2.removeFromParent()
+                tapSprite1?.removeFromParent()
+                tapSprite2?.removeFromParent()
                 meter.beginTimer()
                 isTapDisplayed = false
             }
             
             for touch in touches {
                 if self.nodeAtPoint(touch.locationInNode(self)) == pauseButton {
-                    pauseGame(true);
+                    pauseGame();
                     return
                 }
             }
-            
-            self.removeActionForKey("playerOnStandby")
             
             movePlayer(touches)
             
@@ -246,6 +255,18 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         }
     }
     
+    // Chooses some step for the player to take.
+    func someStep() -> String {
+        if stepLeft == true {
+            stepLeft = false
+            return "player-jump-1"
+        }
+        else {
+            stepLeft = true
+            return "player-jump-2"
+        }
+    }
+    
     // Moves player based on where the user touches
     func movePlayer(touches: NSSet) {
         for touch in touches {
@@ -260,7 +281,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
                     }
                 }
                 else {
-                    player.runAction(SKAction.animateWithTextures([SKTexture(imageNamed: "player-still_03")], timePerFrame: 0.1, resize: false, restore: true))
+                    player.runAction(SKAction.animateWithTextures([SKTexture(imageNamed: someStep())], timePerFrame: 0.1, resize: false, restore: true))
                 }
             }
             else if thisPosition.x > CGRectGetMidX(self.frame) {
@@ -272,7 +293,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
                     }
                 }
                 else {
-                    player.runAction(SKAction.animateWithTextures([SKTexture(imageNamed: "player-still_03")], timePerFrame: 0.1, resize: false, restore: true))
+                    player.runAction(SKAction.animateWithTextures([SKTexture(imageNamed: someStep())], timePerFrame: 0.1, resize: false, restore: true))
                 }
             }
         }
@@ -284,7 +305,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         
         var leftSprite = SKSpriteNode(imageNamed: getRandomPlatform())
         leftSprite.name = "Platform"
-        leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.75 )
+        leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.70 )
         leftSprite.zPosition = -5
         leftSprite.physicsBody = SKPhysicsBody(circleOfRadius: leftSprite.size.width / 2)
         leftSprite.physicsBody?.affectedByGravity = false
@@ -296,7 +317,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         
         var rightSprite = SKSpriteNode(imageNamed: getRandomPlatform())
         rightSprite.name = "Platform"
-        rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.75 )
+        rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.70 )
         rightSprite.zPosition = -5
         rightSprite.physicsBody = SKPhysicsBody(circleOfRadius: rightSprite.size.width / 2)
         rightSprite.physicsBody?.affectedByGravity = false
@@ -310,15 +331,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     // Brings a game over layer into the view
     // Displays score, high score, and gives option to play again, show leaderboards, tweet, or go to store
     func died() {
-        // Run some animation??
         
         meter.stop()
         hideInterface()
         
         if musicIsMuted == false {
-            backgroundMusic.stop()
-            backgroundMusic.currentTime = 0
-            
+            backgroundMusic.volume -= 0.02
         }
         
         if effectsAreMuted == false {
@@ -332,15 +350,9 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         // Update the high score if higher than previous high score
         if score > highScore {
             highScore = score
-            NSUserDefaults().setInteger(highScore, forKey: "highscore")
+            NSUserDefaults().setInteger(highScore, forKey: "highScore")
             saveLeaderBoardScore("score_leaderboard", recievedScore: highScore)
         }
-    }
-    
-    // TODO: When the player dies, have some type of action occur to show his death
-    // Make a sequence where he runs the animation and THEN presentGameOverLayer()
-    func playerDiedAction() {
-        
     }
     
     // Spawns two sprite nodes, one on the left and one on the right.
@@ -352,7 +364,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         if whereIsEnemy == 0 {
             var leftSprite = SKSpriteNode(imageNamed: getRandomPlatform())
             leftSprite.name = "Platform"
-            leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.75)
+            leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.70)
             leftSprite.zPosition = -5
             leftSprite.physicsBody = SKPhysicsBody(circleOfRadius: leftSprite.size.width / 2)
             leftSprite.physicsBody?.affectedByGravity = false
@@ -382,7 +394,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         else if whereIsEnemy == 1 {
             var rightSprite = SKSpriteNode(imageNamed: getRandomPlatform())
             rightSprite.name = "Platform"
-            rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.75)
+            rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.70)
             rightSprite.zPosition = -5
             rightSprite.physicsBody = SKPhysicsBody(circleOfRadius: rightSprite.size.width / 2)
             rightSprite.physicsBody?.affectedByGravity = false
@@ -412,7 +424,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         else {
             var leftSprite = SKSpriteNode(imageNamed: getRandomPlatform())
             leftSprite.name = "Platform"
-            leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.75)
+            leftSprite.position = CGPointMake(kFirstPathX, CGRectGetMaxY(self.frame) + leftSprite.size.height * 0.70)
             leftSprite.zPosition = -5
             leftSprite.physicsBody = SKPhysicsBody(circleOfRadius: leftSprite.size.width / 2)
             leftSprite.physicsBody?.affectedByGravity = false
@@ -424,7 +436,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
             
             var rightSprite = SKSpriteNode(imageNamed: getRandomPlatform())
             rightSprite.name = "Platform"
-            rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.75)
+            rightSprite.position = CGPointMake(kSecondPathX, CGRectGetMaxY(self.frame) + rightSprite.size.height * 0.70)
             rightSprite.zPosition = -5
             rightSprite.physicsBody = SKPhysicsBody(circleOfRadius: rightSprite.size.width / 2)
             rightSprite.physicsBody?.affectedByGravity = false
@@ -452,27 +464,8 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // Initialize the player and its atlases for animations
     func initializePlayer() {
-        var playerStillAtlas = SKTextureAtlas(named: "player-still")
-        var playerJumpLeftAtlas = SKTextureAtlas(named: "player-left")
-        var playerJumpRightAtlas = SKTextureAtlas(named: "player-right")
         
-        for (var i = 1; i <= playerStillAtlas.textureNames.count; i++) {
-            var textureName = String(format: "player-still_0%d", i)
-            var texture = SKTexture(imageNamed: textureName)
-            playerStillFrames.append(texture)
-        }
-        for (var i = 2; i <= playerJumpLeftAtlas.textureNames.count; i++ ) {
-            var textureName = String(format: "player-left_0%d", i)
-            var texture = SKTexture(imageNamed: textureName)
-            playerJumpLeftFrames.append(texture)
-        }
-        for (var i = 2; i <= playerJumpRightAtlas.textureNames.count; i++ ) {
-            var textureName = String(format: "player-right_0%d", i)
-            var texture = SKTexture(imageNamed: textureName)
-            playerJumpRightFrames.append(texture)
-        }
-        
-        
+        playerPositionY = getBottomPlatformY()
         player.position = CGPointMake(kFirstPathX, getBottomPlatformY())
         player.physicsBody = SKPhysicsBody(rectangleOfSize: player.size)
         player.name = "Player"
@@ -482,7 +475,6 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         player.physicsBody?.contactTestBitMask = ColliderType.Death.rawValue | ColliderType.Consumable.rawValue
         player.physicsBody?.collisionBitMask = 0
         self.addChild(player)
-        self.playerTransitionTo("standby")
     }
     
     // Initialize the node that will remove the sprites that go off screen
@@ -500,6 +492,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // Sets up the background
     func setup_background() {
+        
         background = SKSpriteNode(imageNamed: "background")
         background.position = CGPointMake(self.size.width / 2, self.size.height / 2)
         background.zPosition = -100
@@ -535,8 +528,11 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         sideStep = self.setupAudioPlayerWithFile("Step-3", type: "caf")
         sideStep.volume = 0.25
         
-        deathSound = self.setupAudioPlayerWithFile("Death-2", type: "caf")
-        deathSound.volume = 0.3
+        deathSound = self.setupAudioPlayerWithFile("Death-1", type: "caf")
+        deathSound.volume = 0.03
+        
+        popSound = self.setupAudioPlayerWithFile("Blob-1", type: "caf")
+        popSound.volume = 0.03
     }
     
     // Update the canSelect property for each item in the storeDictionary
@@ -585,8 +581,14 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     func setupPlayInterface() {
         
         scoreLabel = BitMapFontLabel(text: "0", fontName: "number-", usingAtlas: "number")
-        scoreLabel.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.height * 0.7)
-        scoreLabel.setScale(1.25)
+        if (UIScreen.mainScreen().bounds.size.height == 736) {
+            scoreLabel.setScale(1.6)
+        }
+        else {
+            scoreLabel.setScale(1.25)
+        }
+        
+        scoreLabel.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.height * 0.8)
         self.addChild(scoreLabel)
         
         // Add pause button
@@ -597,7 +599,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         
         // Add meter
         meter = Meter(texture: meterTexture, color: nil, size: meterTexture.size())
-        meter.position = CGPointMake(pauseButton.position.x, pauseButton.position.y - meter.size.height * 1.3)
+        meter.position = CGPointMake(pauseButton.position.x, pauseButton.position.y - meter.size.height * 0.85)
         meter.zPosition = 25
         self.addChild(meter)
         meter.delegate = self
@@ -634,14 +636,14 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // Returns a random image name for a platform
     func getRandomPlatform() -> String {
-        let randomNumber = arc4random_uniform(UInt32(2)) + 1
+        let randomNumber = arc4random_uniform(UInt32(3)) + 1
         var ret = String(format: "platform-%d", randomNumber)
         return ret
     }
     
     // Determines whether aconsumable should spawn, pretty much a 50/50 chance every score of 5
     func shouldConsumableSpawn() -> Bool {
-        if score % 4 == 0 {
+        if score % spawnDecider == 0 {
             let random = arc4random_uniform(UInt32(2))
             if random == 1 {
                 return true
@@ -655,6 +657,10 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         }
     }
     
+    func spawnConsumablesMoreOften() {
+        spawnDecider = 3
+    }
+    
     // Spawns a consumable that will replenish the meter when the player touches it
     func spawnConsumable(position: CGPoint) {
         var consumable = SKSpriteNode(imageNamed: "consumable")
@@ -662,7 +668,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         consumable.physicsBody?.categoryBitMask = ColliderType.Consumable.rawValue
         consumable.physicsBody?.contactTestBitMask = ColliderType.Player.rawValue | ColliderType.Bottom.rawValue
         consumable.physicsBody?.affectedByGravity = false
-        consumable.position = CGPointMake(position.x, position.y + platformTexture.size().height * 0.63)
+        consumable.position = CGPointMake(position.x, position.y + platformTexture.size().height * 0.5)
         grid.addChild(consumable)
     }
     
@@ -686,10 +692,16 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         else if score == 200 && increaseDifficulty2 {
             increaseDifficulty2 = false
             difficulty--
+            self.spawnConsumablesMoreOften()
         }
         else if score == 300 && increaseDifficulty3 {
             increaseDifficulty3 = false
             difficulty--
+            
+            //Unlocked a new song!
+            storeDictionary["Song-2"]?.isUnlocked = true
+            defaults.setBool(true, forKey: "Song-2")
+            println("Unlocked new song!")
         }
     }
     
@@ -702,7 +714,7 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     func twitterButtonPressed() {
         if SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
             var twitterSheet = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-            twitterSheet.setInitialText("Try beating me! #doyoueven")
+            twitterSheet.setInitialText("I got \(score) in PlatJump! Can you do better?")
             twitterSheet.addImage(takeScreenShotToShare())
             viewController.presentViewController(twitterSheet, animated: true, completion: nil)
         }
@@ -713,7 +725,8 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         }
     }
     
-    // Dismisses the game layer, if the game ended, resets the scene
+    // Dismisses the game layer 
+    // If the game ended, resets the scene, otherwise just start the game for the first time
     func playButtonPressed() {
         self.userInteractionEnabled = true
         
@@ -729,13 +742,14 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         else if game_ended == true {
             fadeInFadeOut()
             if musicIsMuted == false {
-                backgroundMusic.play()
+                backgroundMusic.volume += 0.02
             }
             dismissLayer(gameOverLayer)
             let resetScene = SKAction.runBlock({ self.resetScene() })
             let delay = SKAction.waitForDuration(0.2)
             let displayTapIndicators = SKAction.runBlock({ self.displayTapIndicators() })
-            self.runAction(SKAction.sequence([delay, resetScene, displayTapIndicators]))
+            let unhideInterface = SKAction.runBlock({ self.unhideInterface() })
+            self.runAction(SKAction.sequence([delay, resetScene, displayTapIndicators, unhideInterface]))
             game_started = true
             game_ended = false
         }
@@ -752,44 +766,47 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         presentStoreLayer()
     }
     
-    // Starts the game with the game layer (play button, leaderboards, store, twitter, game logo)
+    // Present a menu where the player can check the leaderboards in the game center, access the 'store',
+    // purchase the 'Remove Ads' IAP, or start the game
     func presentGameStartLayer(animated: Bool) {
-        gameStartLayer = GameLayer(typeofLayer:"GameStart", texture: gameLayerTexture, color: nil, size: gameLayerTexture.size())
+        gameStartLayer = GameLayer(typeofLayer:"GameStart", texture: gameStartTexture, color: nil, size: UIScreen.mainScreen().bounds.size)
         gameStartLayer.delegate = self
+        gameStartLayer.userInteractionEnabled = true
         if animated == true {
             gameStartLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.maxY + gameStartLayer.size.height/2)
         }
         else {
-            gameStartLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.minY + gameStartLayer.size.height * 0.65)
+            gameStartLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.minY + gameStartLayer.size.height * 0.5)
         }
         gameStartLayer.zPosition = 100
-        gameStartLayer.userInteractionEnabled = true
         self.addChild(gameStartLayer)
         
         if animated == true {
-            let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.minY + gameStartLayer.size.height * 0.65, duration: 0.4)
+            let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.midY, duration: 0.4)
             gameStartLayer.runAction(moveDown)
         }
     }
     
-    // Presents a screen where user is given details about score and is given the option to play again
+    // Presents a screen where user is given details about score, high score, is given the chance to post
+    // to twitter as well as the main menu options
     func presentGameOverLayer() {
         
-        gameOverLayer = GameLayer(typeofLayer: "GameOver", texture: gameLayerTexture, color: nil, size: gameLayerTexture.size())
+        gameOverLayer = GameLayer(typeofLayer: "GameOver", texture: gameOverTexture, color: nil, size: UIScreen.mainScreen().bounds.size)
+        gameOverLayer.score = self.score
+        if highScore < score {
+            gameOverLayer.highScore = self.score
+        }
+        else {
+            gameOverLayer.highScore = defaults.integerForKey("highScore")
+        }
+        gameOverLayer.setScores()
         gameOverLayer.delegate = self
         gameOverLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.maxY + gameOverLayer.size.height/2)
         gameOverLayer.zPosition = 100
-        gameOverLayer.userInteractionEnabled = true
         self.addChild(gameOverLayer)
         
-        twitterButton = SKSpriteNode(imageNamed: "twitterButton")
-        twitterButton.position = CGPointMake(0, 0 - (gameOverLayer.size.height / 2) + (twitterButton.size.height * 0.8))
-        twitterButton.zPosition = 100
-        gameOverLayer.twitterButton = self.twitterButton
-        gameOverLayer.addChild(twitterButton)
-        
-        let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.minY + gameOverLayer.size.height * 0.65, duration: 0.4)
-        gameOverLayer.runAction(SKAction.sequence([moveDown, SKAction.runBlock({ self.shouldLoadAd() })]))
+        let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.midY, duration: 0.4)
+        gameOverLayer.runAction(SKAction.sequence([moveDown, SKAction.runBlock({ self.gameOverLayer.userInteractionEnabled = true }), SKAction.runBlock({ self.shouldLoadAd() })]))
     }
     
     // Removes the game layer screen
@@ -806,18 +823,19 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // Presents a store layer where the user can choose other songs/art...
     func presentStoreLayer() {
-        gameStoreLayer = StoreLayer(texture: gameLayerTexture, color: nil, size: gameLayerTexture.size())
+        hideInterface()
+        gameStoreLayer = StoreLayer(texture: storeTexture, color: nil, size: UIScreen.mainScreen().bounds.size)
         gameStoreLayer.delegate = self
         gameStoreLayer.position = CGPointMake(self.frame.midX, UIScreen.mainScreen().bounds.maxY + gameStoreLayer.size.height/2)
         gameStoreLayer.zPosition = 100
         gameStoreLayer.userInteractionEnabled = true
         self.addChild(gameStoreLayer)
         
-        let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.minY + gameStoreLayer.size.height * 0.65, duration: 0.4)
+        let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.midY, duration: 0.4)
         gameStoreLayer.runAction(SKAction.sequence([SKAction.runBlock({ self.gameStoreLayer.storeItems = self.storeItems }), SKAction.runBlock({ self.gameStoreLayer.updateDisplay(0) }), moveDown]))
     }
     
-    // Dismisses the game store layer and presents the layer the user was in
+    // Dismisses the game store layer and presents initial screen
     func selectButtonPressed(newChoice: String) {
         
         // Set the canSelect properties of the old selection and the new one
@@ -829,16 +847,17 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         // save settings
         defaults.setValue(newChoice, forKey: "songChoice")
         
+        if demoMusicIsPlaying == true {
+            demoMusicIsPlaying = false
+            demoMusic.stop()
+            demoMusic.currentTime = 0
+        }
+        
+        
         // start new song
         updateAudio(newChoice)
         
         dismissLayer(gameStoreLayer)
-//        if game_started == false {
-//            presentGameStartLayer(true)
-//        }
-//        else {
-//            presentGameOverLayer()
-//        }
         
         game_started = false
         game_ended = false
@@ -847,41 +866,41 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         let delay = SKAction.waitForDuration(0.2)
         self.runAction(SKAction.sequence([delay, resetScene]))
         presentGameStartLayer(true)
+        hideInterface()
     }
     
     // Lets the user briefly listen to whatever object they chose
     func listenButtonPressed(choice: String) {
-        demoMusic.stop()
-        demoMusic.currentTime = 0.0
-        demoMusic = setupAudioPlayerWithFile(choice, type: "aifc")
-        demoMusic.volume = 0.4
+        
+        if introMusic.playing == true {
+            introMusic.stop()
+        }
+        else if backgroundMusic.playing == true {
+            backgroundMusic.stop()
+        }
+        demoMusicIsPlaying = true
+        var stringLength = countElements(choice)
+        var introSongString = String(format: "Intro-%@", choice[stringLength - 1])
+        
+        demoMusic = setupAudioPlayerWithFile(introSongString, type: "aifc")
+        demoMusic.volume = 0.05
         demoMusic.play()
     }
     
     // Presents a pause screen when the user presses the pause button
-    func presentGamePauseLayer(animated: Bool) {
-        gamePauseLayer = PauseLayer(typeofLayer: "GamePaused", texture: gamePauseTexture, color: nil, size: gamePauseTexture.size())
+    func presentGamePauseLayer() {
+        gamePauseLayer = PauseLayer(typeofLayer: "GamePaused", texture: gamePauseTexture, color: nil, size: UIScreen.mainScreen().bounds.size)
         gamePauseLayer.delegate = self
-        
-        if animated == true {
-            gamePauseLayer.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.height + gamePauseLayer.size.height)
-        }
-        else {
-            gamePauseLayer.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.midY)
-        }
+        gamePauseLayer.position = CGPointMake(UIScreen.mainScreen().bounds.midX, UIScreen.mainScreen().bounds.midY)
         gamePauseLayer.zPosition = 100
         gamePauseLayer.userInteractionEnabled = true
         self.addChild(gamePauseLayer)
-        
-        if animated == true {
-            let moveDown = SKAction.moveToY(UIScreen.mainScreen().bounds.midY, duration: 0.4)
-            gamePauseLayer.runAction(moveDown)
-        }
     }
     
     // Resumes the game
     func resumeButtonPressed() {
         dismissLayer(gamePauseLayer)
+        unhideInterface()
         self.userInteractionEnabled = true
         player.paused = false
         meter.paused = false
@@ -891,10 +910,11 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     func muteEffectsButtonPressed() {
         if effectsAreMuted == true {
             effectsAreMuted = false
-            // Change the button icon just like below.
+            gamePauseLayer.soundButton.alpha = 1
         }
         else {
             effectsAreMuted = true
+            gamePauseLayer.soundButton.alpha = 0.5
         }
         defaults.setBool(effectsAreMuted, forKey: "effectsAreMuted")
     }
@@ -905,12 +925,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
             backgroundMusic.stop()
             backgroundMusic.currentTime = 0
             musicIsMuted = true
-            gamePauseLayer.musicButton.texture = SKTexture(imageNamed: "muteImage")
+            gamePauseLayer.musicButton.alpha = 0.5
         }
         else if musicIsMuted == true {
             backgroundMusic.play()
             musicIsMuted = false
-            gamePauseLayer.musicButton.texture = SKTexture(imageNamed: "notMuteImage")
+            gamePauseLayer.musicButton.alpha = 1
         }
         
         defaults.setBool(musicIsMuted, forKey: "musicIsMuted")
@@ -921,10 +941,10 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         resetScoreAndDifficulty()
         grid.removeAllChildren()
         player.position.x = kFirstPathX
-        self.playerTransitionTo("standby")
+        player.position.y = playerPositionY
+        player.texture = SKTexture(imageNamed: "player-still")
         setup_platforms()
         meter.reset()
-        unhideInterface()
     }
     
     // Resets the score, the score label, the difficulty, and grabs the newest high score
@@ -949,22 +969,17 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // The meter ran out, player failed to refill
     func meterRanOut() {
-        // Run some animation?
-        died()
+        var dieAnimation = SKAction.animateWithTextures([SKTexture(imageNamed: "player-death-1"), SKTexture(imageNamed: "player-death-2")], timePerFrame: 0.5, resize: false, restore: false)
+        self.runAction(SKAction.sequence([SKAction.runBlock({ self.player.runAction(dieAnimation)}), SKAction.runBlock({  self.died() })]))
     }
     
     func playerTransitionTo(action: String) {
         switch action {
-        case "standby":
-            var delay = SKAction.waitForDuration(0.4)
-            var standbyAction = SKAction.repeatActionForever(SKAction.sequence([delay, SKAction.animateWithTextures(playerStillFrames, timePerFrame: 0.15, resize: false, restore: true)]))
-            var reset = SKAction.sequence([SKAction.runBlock({ self.player.texture = SKTexture(imageNamed: "player-still_01") })])
-            player.runAction(SKAction.sequence([reset, standbyAction]), withKey: "current")
         case "jumpLeft":
-            var jumpLeft = SKAction.animateWithTextures(playerJumpRightFrames, timePerFrame: 0.05, resize: false, restore: true)
+            var jumpLeft = SKAction.animateWithTextures([SKTexture(imageNamed: "player-jump-left")], timePerFrame: 0.1, resize: false, restore: true)
             player.runAction(SKAction.sequence([jumpLeft]), withKey: "current")
         case "jumpRight":
-            var jumpRight = SKAction.animateWithTextures(playerJumpLeftFrames, timePerFrame: 0.05, resize: false, restore: true)
+            var jumpRight = SKAction.animateWithTextures([SKTexture(imageNamed: "player-jump-right")], timePerFrame: 0.1, resize: false, restore: true)
             player.runAction(SKAction.sequence([jumpRight]), withKey: "current")
         default:
             println("Error: invalid action")
@@ -974,12 +989,12 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     // Displays the tap indicators in the bottom of the screen
     func displayTapIndicators() {
         tapSprite1 = SKSpriteNode(imageNamed: "tap-1")
-        tapSprite1.position = CGPointMake(kFirstPathX, self.frame.minY + tapSprite1.frame.height*0.7)
+        tapSprite1.position = CGPointMake(kFirstPathX, self.frame.minY + tapSprite1.frame.height)
         tapSprite1.zPosition = 25
         self.addChild(tapSprite1)
         
         tapSprite2 = SKSpriteNode(imageNamed: "tap-1")
-        tapSprite2.position = CGPointMake(kSecondPathX, self.frame.minY + tapSprite2.frame.height*0.7)
+        tapSprite2.position = CGPointMake(kSecondPathX, self.frame.minY + tapSprite2.frame.height)
         tapSprite2.zPosition = 25
         self.addChild(tapSprite2)
         
@@ -1021,12 +1036,13 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     }
     
     // Pauses the game
-    func pauseGame(animated: Bool) {
+    func pauseGame() {
         if game_started == true {
             self.userInteractionEnabled = false
+            hideInterface()
             player.paused = true
             meter.paused = true
-            presentGamePauseLayer(animated)
+            presentGamePauseLayer()
         }
     }
     
@@ -1040,14 +1056,15 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
     
     // Setup the array of Store objects, as well as a dictionary for us to make any quick changes
     func setupStoreObjects() {
-        var song_one = StoreObject(key: "Song-1", name: "Song One", preRequisite: "Nothing to show here")
-        var song_two = StoreObject(key: "Song-2", name: "Song Two", preRequisite: "Score > 300 or RATE")
-        var coming_soon = StoreObject(key: "coming_soon", name: "Coming Soon!", preRequisite: "Nothing to show here")
+        var song_one = StoreObject(key: "Song-1", name: "Song_One")
+        var song_two = StoreObject(key: "Song-2", name: "Song_Two")
+        var coming_soon = StoreObject(key: "coming_soon", name: "Coming Soon!")
         
         song_one.isUnlocked = true
-        defaults.setBool(true, forKey: "song_one")
+        defaults.setBool(true, forKey: "Song-1")
         
-        song_two.isUnlocked = defaults.boolForKey("song_two")
+        song_two.isUnlocked = defaults.boolForKey("Song-2")
+        coming_soon.isUnlocked = false
         
         storeItems.append(song_one)
         storeItems.append(song_two)
@@ -1056,5 +1073,40 @@ class PlayScene: SKScene, SKPhysicsContactDelegate, ADBannerViewDelegate, GameLa
         storeDictionary["Song-1"] = song_one
         storeDictionary["Song-2"] = song_two
         storeDictionary["coming_soon"] = coming_soon
+    }
+    
+    // Delegates the work to the view controller 
+    func removeAdsButtonPressed() {
+        self.viewController.removeAds()
+    }
+    
+    //
+    func rateMe() {
+        var neverRate = NSUserDefaults.standardUserDefaults().boolForKey("neverRate")
+        var numLaunches = NSUserDefaults.standardUserDefaults().integerForKey("numLaunches") + 1
+        
+        if (!neverRate && (numLaunches == rateMinSessions || numLaunches >= (rateMinSessions + rateTryAgainSessions + 1)))
+        {
+            showRateMe()
+            numLaunches = rateMinSessions + 1
+        }
+        NSUserDefaults.standardUserDefaults().setInteger(numLaunches, forKey: "numLaunches")
+    }
+    
+    //
+    func showRateMe() {
+        var alert = UIAlertController(title: "Rate Us", message: "Thanks for playing!", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "Rate PlatJump", style: UIAlertActionStyle.Default, handler: { alertAction in
+            UIApplication.sharedApplication().openURL(NSURL(string : "itms-apps://itunes.apple.com/app/bars/957839280")!)
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "No Thanks", style: UIAlertActionStyle.Default, handler: { alertAction in
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "neverRate")
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        alert.addAction(UIAlertAction(title: "Maybe Later", style: UIAlertActionStyle.Default, handler: { alertAction in
+            alert.dismissViewControllerAnimated(true, completion: nil)
+        }))
+        self.viewController.presentViewController(alert, animated: true, completion: nil)
     }
 }

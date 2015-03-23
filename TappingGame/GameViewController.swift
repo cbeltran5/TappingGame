@@ -9,6 +9,7 @@
 import UIKit
 import SpriteKit
 import iAd
+import StoreKit
 
 extension SKNode {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
@@ -26,21 +27,27 @@ extension SKNode {
     }
 }
 
-class GameViewController: UIViewController, ADBannerViewDelegate {
+class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     
     var bannerView: ADBannerView!
     var scene: PlayScene!
+    let defaults = NSUserDefaults.standardUserDefaults()
+    var product_id: NSString!
     
     func appDelegate() -> AppDelegate {
         return UIApplication.sharedApplication().delegate as AppDelegate
     }
     
     override func viewWillAppear(animated: Bool) {
-        bannerView = ADBannerView(adType: .Banner)
-        bannerView.delegate = self
-        bannerView.hidden = true
-        bannerView.frame = CGRectMake(0, 0, 0, 0)
-        self.view.addSubview(bannerView)
+        var defaults = NSUserDefaults.standardUserDefaults()
+        
+        if defaults.boolForKey("removeAdsPurchased") == false {
+            bannerView = ADBannerView(adType: .Banner)
+            bannerView.delegate = self
+            bannerView.hidden = true
+            bannerView.frame = CGRectMake(0, 0, 0, 0)
+            self.view.addSubview(bannerView)
+        }
     }
     
     func bannerViewDidLoadAd(banner: ADBannerView!) {
@@ -50,6 +57,10 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(1)
         UIView.commitAnimations()
+        
+        product_id = "removeAds"
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        
     }
     
     func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
@@ -74,7 +85,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         skView.ignoresSiblingOrder = true
         
         /* Set the scale mode to scale to fit the window */
-        scene.scaleMode = .AspectFill
+        scene.scaleMode = .AspectFit
         scene.size = skView.bounds.size
         
         // Set the view controller of the play scene to self to present leaderboards
@@ -84,6 +95,10 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
         appDelegate().viewController = self
         
         skView.presentScene(scene)
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        scene.rateMe()
     }
 
     override func shouldAutorotate() -> Bool {
@@ -112,4 +127,75 @@ class GameViewController: UIViewController, ADBannerViewDelegate {
             println("ad loaded")
         }
     }
+    
+    // IAP functions
+    
+    func removeAds() {
+        if SKPaymentQueue.canMakePayments() {
+            var productID:NSSet = NSSet(object: self.product_id!)
+            var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID)
+            productsRequest.delegate = self
+            productsRequest.start()
+            println("Fetching products...")
+        }
+        else {
+            println("Can't make purchases")
+        }
+    }
+    
+    func buyProduct(product: SKProduct) {
+        println("Sending the Payment Request to Apple");
+        var payment = SKPayment(product: product)
+        SKPaymentQueue.defaultQueue().addPayment(payment);
+    }
+    
+    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
+        var count : Int = response.products.count
+        if (count>0) {
+            var validProducts = response.products
+            var validProduct: SKProduct = response.products[0] as SKProduct
+            if (validProduct.productIdentifier == self.product_id) {
+                println(validProduct.localizedTitle)
+                println(validProduct.localizedDescription)
+                println(validProduct.price)
+                buyProduct(validProduct);
+            }
+            else {
+                println(validProduct.productIdentifier)
+            }
+        }
+        else {
+            println("nothing")
+        }
+    }
+    
+    func request(request: SKRequest!, didFailWithError error: NSError!) {
+        println("Error fetching product info")
+    }
+    
+    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
+        println("Received Payment Transaction Response from Apple");
+        
+        for transaction:AnyObject in transactions {
+            if let trans:SKPaymentTransaction = transaction as? SKPaymentTransaction{
+                switch trans.transactionState {
+                case .Purchased:
+                    println("Product Purchased");
+                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as SKPaymentTransaction)
+                    defaults.setBool(true , forKey: "removeAdsPurchased")
+                    break;
+                case .Failed:
+                    println("Purchased Failed");
+                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as SKPaymentTransaction)
+                    break;
+                case .Restored:
+                    println("Already Purchased");
+                    SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+                default:
+                    break;
+                }
+            }
+        }
+    }
+    
 }

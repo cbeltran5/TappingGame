@@ -19,8 +19,10 @@ class PauseLayer: SKSpriteNode {
     
     var resumeButton: SKSpriteNode!
     var musicButton: SKSpriteNode!
+    var soundButton: SKSpriteNode!
     var muteEffectsButton: SKSpriteNode!
     var musicLabel: SKSpriteNode!
+    var soundLabel: SKSpriteNode!
     var delegate: PauseLayerDelegate?
     var defaults = NSUserDefaults()
     
@@ -29,31 +31,48 @@ class PauseLayer: SKSpriteNode {
     }
 
     convenience init(typeofLayer: String, texture: SKTexture!, color: UIColor!, size: CGSize) {
-        self.init(texture: texture, color: color, size: size)
+        self.init(texture: nil, color: color, size: size)
         
-        resumeButton = SKSpriteNode(imageNamed: "resumeButton")
-        resumeButton.position = CGPointMake(0, -self.size.height/2 + resumeButton.size.height)
-        resumeButton.zPosition = 100
-        self.addChild(resumeButton)
+        var layer = SKSpriteNode(texture: texture)
+        layer.position = CGPointMake(0, 0)
+        layer.zPosition = 50
+        self.addChild(layer)
         
         musicLabel = SKSpriteNode(imageNamed: "musicLabel")
-        musicLabel.position = CGPointMake(-musicLabel.size.width/2, musicLabel.size.height)
+        musicLabel.position = CGPointMake(-15, musicLabel.size.height/2)
         musicLabel.zPosition = 100
         self.addChild(musicLabel)
         
+        soundLabel = SKSpriteNode(imageNamed: "soundLabel")
+        soundLabel.position = CGPointMake(musicLabel.position.x, -musicLabel.size.height/2)
+        soundLabel.zPosition = 100
+        self.addChild(soundLabel)
+        
+        resumeButton = SKSpriteNode(imageNamed: "resumeButton")
+        resumeButton.position = CGPointMake(0, soundLabel.position.y - resumeButton.size.height * 0.85)
+        resumeButton.zPosition = 100
+        self.addChild(resumeButton)
+        
         let musicIsMuted = defaults.boolForKey("musicIsMuted")
+        let soundIsMuted = defaults.boolForKey("effectsAreMuted")
+        
+        musicButton = SKSpriteNode(imageNamed: "muteIcon")
+        musicButton.position = CGPointMake(layer.frame.maxX - musicButton.size.width * 1.7, musicLabel.position.y)
+        musicButton.zPosition = 100
+        self.addChild(musicButton)
+        
+        soundButton = SKSpriteNode(imageNamed: "muteIcon")
+        soundButton.position = CGPointMake(layer.frame.maxX - soundButton.size.width * 1.7, soundLabel.position.y)
+        soundButton.zPosition = 100
+        self.addChild(soundButton)
+        
         if musicIsMuted == true {
-            musicButton = SKSpriteNode(imageNamed: "muteImage")
-            musicButton.position = CGPointMake(musicButton.size.width, musicLabel.position.y)
-            musicButton.zPosition = 100
-            self.addChild(musicButton)
+            musicButton.alpha = 0.5
         }
-        else {
-            musicButton = SKSpriteNode(imageNamed: "notMuteImage")
-            musicButton.position = CGPointMake(musicButton.size.width, musicLabel.position.y)
-            musicButton.zPosition = 100
-            self.addChild(musicButton)
+        if soundIsMuted == true {
+            soundButton.alpha = 0.5
         }
+        
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -64,6 +83,10 @@ class PauseLayer: SKSpriteNode {
             }
             else if self.nodeAtPoint(thisPosition) == musicButton {
                 self.delegate?.muteMusicButtonPressed()
+            }
+            else if self.nodeAtPoint(thisPosition) == self.soundButton {
+                // mute sounds
+                self.delegate?.muteEffectsButtonPressed()
             }
         }
     }

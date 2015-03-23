@@ -13,15 +13,13 @@ import SpriteKit
 class StoreObject {
     var key: String!            // A String we can use to access in other places
     var name: String!           // The String to be displayed on-screen for the name
-    var preRequisite: String    // To be displayed on screen, what is required to unlock
     var isUnlocked: Bool        // Is this object unlocked
     var canSelect: Bool         // Can the user select this item
     
-    init(key: String, name: String, preRequisite: String) {
+    init(key: String, name: String) {
         self.name = name
         self.key = key
         self.isUnlocked = false
-        self.preRequisite = preRequisite
         self.canSelect = false
     }
     
