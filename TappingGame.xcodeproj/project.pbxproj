@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		081C3A2E1B09001900EB3620 /* meteor-bit.png in Resources */ = {isa = PBXBuildFile; fileRef = 081C3A2D1B09001900EB3620 /* meteor-bit.png */; };
+		081C3A321B0901B200EB3620 /* meteor-bit-2.png in Resources */ = {isa = PBXBuildFile; fileRef = 081C3A311B0901B200EB3620 /* meteor-bit-2.png */; };
 		083453BF1A7F40A9007CF60C /* StoreLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083453BE1A7F40A9007CF60C /* StoreLayer.swift */; };
 		0854AB111A96CE76007680BA /* Song-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 0854AB0E1A96CE76007680BA /* Song-1.aifc */; };
 		0854AB131A96CE76007680BA /* Intro-1.aifc in Resources */ = {isa = PBXBuildFile; fileRef = 0854AB101A96CE76007680BA /* Intro-1.aifc */; };
+		085D42821B0111CB00F27106 /* Parallax.sks in Resources */ = {isa = PBXBuildFile; fileRef = 085D42801B0111CB00F27106 /* Parallax.sks */; };
+		085D42871B0118A300F27106 /* debris.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 085D42861B0118A300F27106 /* debris.atlas */; };
 		0885E0E11A9D808300685BB0 /* tap.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 0885E0E01A9D808300685BB0 /* tap.atlas */; };
 		088AE2C21A6AE599008B345F /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 088AE2C11A6AE599008B345F /* iAd.framework */; };
 		088AE2CE1A6B7363008B345F /* GameLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 088AE2CD1A6B7363008B345F /* GameLayer.swift */; };
@@ -46,9 +50,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		081C3A2D1B09001900EB3620 /* meteor-bit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "meteor-bit.png"; sourceTree = "<group>"; };
+		081C3A311B0901B200EB3620 /* meteor-bit-2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "meteor-bit-2.png"; sourceTree = "<group>"; };
 		083453BE1A7F40A9007CF60C /* StoreLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreLayer.swift; sourceTree = "<group>"; };
 		0854AB0E1A96CE76007680BA /* Song-1.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Song-1.aifc"; sourceTree = "<group>"; };
 		0854AB101A96CE76007680BA /* Intro-1.aifc */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Intro-1.aifc"; sourceTree = "<group>"; };
+		085D42801B0111CB00F27106 /* Parallax.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Parallax.sks; sourceTree = "<group>"; };
+		085D42861B0118A300F27106 /* debris.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = debris.atlas; sourceTree = "<group>"; };
 		0885E0E01A9D808300685BB0 /* tap.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = tap.atlas; sourceTree = "<group>"; };
 		088AE2C11A6AE599008B345F /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		088AE2CD1A6B7363008B345F /* GameLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLayer.swift; path = ../GameLayer.swift; sourceTree = "<group>"; };
@@ -119,6 +127,9 @@
 				08A767041A5BAF0A0010BEC4 /* TappingGame */,
 				08A7671E1A5BAF0A0010BEC4 /* TappingGameTests */,
 				08A767031A5BAF0A0010BEC4 /* Products */,
+				081C3A311B0901B200EB3620 /* meteor-bit-2.png */,
+				081C3A2D1B09001900EB3620 /* meteor-bit.png */,
+				085D42861B0118A300F27106 /* debris.atlas */,
 				0885E0E01A9D808300685BB0 /* tap.atlas */,
 				08BA11941A91C6A000943E23 /* number.atlas */,
 				0898F2411A75EB0500CC163D /* Audio */,
@@ -141,6 +152,7 @@
 				08BA11921A91BA7B00943E23 /* BitmapFontLabel.swift */,
 				0894A3C21A7C5FE70052B2A3 /* Meter.swift */,
 				088CECC21A5C4C7200DD3BE3 /* PlayScene.swift */,
+				085D42801B0111CB00F27106 /* Parallax.sks */,
 				08B24E491A94321800C389A8 /* StoreObject.swift */,
 				083453BE1A7F40A9007CF60C /* StoreLayer.swift */,
 				088AE2CD1A6B7363008B345F /* GameLayer.swift */,
@@ -269,7 +281,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				081C3A2E1B09001900EB3620 /* meteor-bit.png in Resources */,
 				0885E0E11A9D808300685BB0 /* tap.atlas in Resources */,
+				085D42821B0111CB00F27106 /* Parallax.sks in Resources */,
 				08D927EA1AA6C56900001B08 /* Blob-1.caf in Resources */,
 				0854AB111A96CE76007680BA /* Song-1.aifc in Resources */,
 				08B24E521A944C1000C389A8 /* Intro-2.aifc in Resources */,
@@ -277,6 +291,8 @@
 				08B24E541A944C1000C389A8 /* Step-3.caf in Resources */,
 				08BA11951A91C6A000943E23 /* number.atlas in Resources */,
 				08D927E81AA6C54000001B08 /* Death-1.caf in Resources */,
+				081C3A321B0901B200EB3620 /* meteor-bit-2.png in Resources */,
+				085D42871B0118A300F27106 /* debris.atlas in Resources */,
 				08A767131A5BAF0A0010BEC4 /* Images.xcassets in Resources */,
 				08A7670A1A5BAF0A0010BEC4 /* GameScene.sks in Resources */,
 				08A767111A5BAF0A0010BEC4 /* Main.storyboard in Resources */,
@@ -424,7 +440,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TappingGame/Info.plist;
@@ -440,7 +455,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = TappingGame/Info.plist;

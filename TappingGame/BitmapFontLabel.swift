@@ -27,18 +27,18 @@ class BitMapFontLabel: SKNode {
         self.text = text
         self.letterSpacing = 2.0
         self.atlasUsed = usingAtlas
-        atlas = SKTextureAtlas(named: atlasUsed)
+        atlas = SKTextureAtlas(named: atlasUsed as String)
         self.updateText()
     }
     
-    func setText(text: NSString) {
+    func set_Text(text: NSString) {
         if self.text != text {
             self.text = text
             updateText()
         }
     }
     
-    func setFontName(fontName: NSString) {
+    func set_FontName(fontName: NSString) {
         if self.fontName != fontName {
             self.fontName = fontName
             updateText()
@@ -74,7 +74,7 @@ class BitMapFontLabel: SKNode {
             
             if i < self.children.count {
                 // Reuse an existing node.
-                letter = self.children[i] as SKSpriteNode
+                letter = self.children[i] as! SKSpriteNode
                 letter.texture = atlas.textureNamed(textureName)
             } else {
                 // Create a new letter node.
@@ -98,7 +98,7 @@ class BitMapFontLabel: SKNode {
         // Center text.
         var adjustment = CGPointMake(-totalSize.width * 0.5, -totalSize.height * 0.5)
         for letter in self.children {
-            let letterNode = letter as SKSpriteNode
+            let letterNode = letter as! SKSpriteNode
             letterNode.position = CGPointMake(letter.position.x + adjustment.x, letter.position.y + adjustment.y);
         }
 

@@ -13,12 +13,12 @@ import StoreKit
 
 extension SKNode {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file, ofType: "sks") {
+        if let path = NSBundle.mainBundle().pathForResource(file as? String, ofType: "sks") {
             var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
             var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
             
             archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as PlayScene
+            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! PlayScene
             archiver.finishDecoding()
             return scene
         } else {
@@ -35,7 +35,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
     var product_id: NSString!
     
     func appDelegate() -> AppDelegate {
-        return UIApplication.sharedApplication().delegate as AppDelegate
+        return UIApplication.sharedApplication().delegate as! AppDelegate
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -76,7 +76,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
         super.viewDidLoad()
         
         scene = PlayScene()
-        let skView = self.view as SKView
+        let skView = self.view as! SKView
         
         skView.showsFPS = false
         skView.showsNodeCount = false
@@ -85,7 +85,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
         skView.ignoresSiblingOrder = true
         
         /* Set the scale mode to scale to fit the window */
-        scene.scaleMode = .AspectFit
+        scene.scaleMode = .AspectFill
         scene.size = skView.bounds.size
         
         // Set the view controller of the play scene to self to present leaderboards
@@ -133,7 +133,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
     func removeAds() {
         if SKPaymentQueue.canMakePayments() {
             var productID:NSSet = NSSet(object: self.product_id!)
-            var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID)
+            var productsRequest:SKProductsRequest = SKProductsRequest(productIdentifiers: productID as! Set<NSString>)
             productsRequest.delegate = self
             productsRequest.start()
             println("Fetching products...")
@@ -153,7 +153,7 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
         var count : Int = response.products.count
         if (count>0) {
             var validProducts = response.products
-            var validProduct: SKProduct = response.products[0] as SKProduct
+            var validProduct: SKProduct = response.products[0] as! SKProduct
             if (validProduct.productIdentifier == self.product_id) {
                 println(validProduct.localizedTitle)
                 println(validProduct.localizedDescription)
@@ -181,12 +181,12 @@ class GameViewController: UIViewController, ADBannerViewDelegate, SKProductsRequ
                 switch trans.transactionState {
                 case .Purchased:
                     println("Product Purchased");
-                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as SKPaymentTransaction)
+                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as! SKPaymentTransaction)
                     defaults.setBool(true , forKey: "removeAdsPurchased")
                     break;
                 case .Failed:
                     println("Purchased Failed");
-                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as SKPaymentTransaction)
+                    SKPaymentQueue.defaultQueue().finishTransaction(transaction as! SKPaymentTransaction)
                     break;
                 case .Restored:
                     println("Already Purchased");

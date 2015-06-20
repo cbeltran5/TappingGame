@@ -25,22 +25,6 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
-            landmarkName = "movePlayer(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "TappingGame/GameScene.swift"
             timestampString = "442896825.679552"
             startingColumnNumber = "9223372036854775807"
@@ -56,6 +40,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.playButton.getter : ObjectiveC.SKSpriteNode"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.719996"
                   startingColumnNumber = "9223372036854775807"
@@ -70,6 +55,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.playButton.setter : ObjectiveC.SKSpriteNode"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.72145"
                   startingColumnNumber = "9223372036854775807"
@@ -84,6 +70,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.playButton.materializeForSet : ObjectiveC.SKSpriteNode"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.72164"
                   startingColumnNumber = "9223372036854775807"
@@ -98,6 +85,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.init (TappingGame.GameScene.Type)(size : C.CGSize) -&gt; TappingGame.GameScene"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.721961"
                   startingColumnNumber = "9223372036854775807"
@@ -112,6 +100,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.init (TappingGame.GameScene.Type)() -&gt; TappingGame.GameScene"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.722116"
                   startingColumnNumber = "9223372036854775807"
@@ -126,6 +115,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.GameScene.init (TappingGame.GameScene.Type)(coder : ObjectiveC.NSCoder) -&gt; Swift.Optional&lt;TappingGame.GameScene&gt;"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/GameScene.swift"
                   timestampString = "442896825.722288"
                   startingColumnNumber = "9223372036854775807"
@@ -160,12 +150,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "682"
-            endingLineNumber = "682"
-            landmarkName = "saveLeaderBoardScore(_:recievedScore:)"
+            startingLineNumber = "798"
+            endingLineNumber = "798"
+            landmarkName = "update(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -176,11 +166,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "79"
+            endingLineNumber = "79"
             landmarkName = "PlayScene"
             landmarkType = "3">
             <Locations>
@@ -190,6 +180,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.gameOverScreen.getter : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.SKSpriteNode&gt;"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.595206"
                   startingColumnNumber = "9223372036854775807"
@@ -204,6 +195,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.gameOverScreen.setter : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.SKSpriteNode&gt;"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.595439"
                   startingColumnNumber = "9223372036854775807"
@@ -218,6 +210,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.gameOverScreen.materializeForSet : Swift.ImplicitlyUnwrappedOptional&lt;ObjectiveC.SKSpriteNode&gt;"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.595607"
                   startingColumnNumber = "9223372036854775807"
@@ -232,6 +225,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.init (TappingGame.PlayScene.Type)(size : C.CGSize) -&gt; TappingGame.PlayScene"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.595742"
                   startingColumnNumber = "9223372036854775807"
@@ -246,6 +240,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.init (TappingGame.PlayScene.Type)() -&gt; TappingGame.PlayScene"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.595873"
                   startingColumnNumber = "9223372036854775807"
@@ -260,6 +255,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "TappingGame.PlayScene.init (TappingGame.PlayScene.Type)(coder : ObjectiveC.NSCoder) -&gt; Swift.Optional&lt;TappingGame.PlayScene&gt;"
                   moduleName = "TappingGame"
+                  usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/Calos/Desktop/misc/SwiftProjects/TappingGame/TappingGame/PlayScene.swift"
                   timestampString = "443246765.596002"
                   startingColumnNumber = "9223372036854775807"
@@ -278,27 +274,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "243"
-            endingLineNumber = "243"
-            landmarkName = "touchesBegan(_:withEvent:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "454"
-            endingLineNumber = "454"
+            startingLineNumber = "513"
+            endingLineNumber = "513"
             landmarkName = "spawnSomething()"
             landmarkType = "5">
          </BreakpointContent>
@@ -310,12 +290,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "701"
-            endingLineNumber = "701"
-            landmarkName = "update(_:)"
+            startingLineNumber = "817"
+            endingLineNumber = "817"
+            landmarkName = "twitterButtonPressed()"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -326,13 +306,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "459"
-            endingLineNumber = "459"
-            landmarkName = "PlayScene"
-            landmarkType = "3">
+            startingLineNumber = "522"
+            endingLineNumber = "522"
+            landmarkName = "spawnSomething()"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -358,11 +338,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "157"
+            endingLineNumber = "157"
             landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -374,11 +354,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "158"
+            endingLineNumber = "158"
             landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -390,11 +370,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "138"
-            endingLineNumber = "138"
+            startingLineNumber = "156"
+            endingLineNumber = "156"
             landmarkName = "didMoveToView(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -438,11 +418,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "514"
-            endingLineNumber = "514"
+            startingLineNumber = "625"
+            endingLineNumber = "625"
             landmarkName = "setupAllAudio()"
             landmarkType = "5">
          </BreakpointContent>
@@ -470,11 +450,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "840"
-            endingLineNumber = "840"
+            startingLineNumber = "966"
+            endingLineNumber = "966"
             landmarkName = "selectButtonPressed(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -486,12 +466,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "TappingGame/PlayScene.swift"
-            timestampString = "448774440.31091"
+            timestampString = "453576411.954726"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1111"
-            endingLineNumber = "1111"
-            landmarkName = "showRateMe()"
+            startingLineNumber = "1232"
+            endingLineNumber = "1232"
+            landmarkName = "PlayScene"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "453576411.954726"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "858"
+            endingLineNumber = "858"
+            landmarkName = "storeButtonPressed()"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TappingGame/PlayScene.swift"
+            timestampString = "453576411.954726"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "243"
+            endingLineNumber = "243"
+            landmarkName = "touchesBegan(_:withEvent:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

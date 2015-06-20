@@ -75,9 +75,9 @@ class PauseLayer: SKSpriteNode {
         
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in touches {
-            let thisPosition: CGPoint = touch.locationInNode(self)
+            let thisPosition: CGPoint = (touch as! UITouch).locationInNode(self)
             if self.nodeAtPoint(thisPosition) == self.resumeButton {
                 self.delegate?.resumeButtonPressed()
             }

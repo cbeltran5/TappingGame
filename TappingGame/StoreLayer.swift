@@ -68,9 +68,9 @@ class StoreLayer: SKSpriteNode {
         self.addChild(rightButton)
     }
     
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in touches {
-            let thisPosition = touch.locationInNode(self)
+            let thisPosition = (touch as! UITouch).locationInNode(self)
             if self.nodeAtPoint(thisPosition) == selectButton && selectButton.hidden == false {
                 self.delegate?.selectButtonPressed(storeItems[currentIndex].key)
             }
@@ -142,7 +142,7 @@ class StoreLayer: SKSpriteNode {
             preReqLabel.hidden = true
         }
         else {
-            var stringLength = countElements(currentObject.key)
+            var stringLength = count(currentObject.key)
             var nameString: String = String(format: "track-%@", currentObject.key[stringLength - 1])
             var preReqString: String = String(format: "pre-req-%@", currentObject.key[stringLength - 1])
             

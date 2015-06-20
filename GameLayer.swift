@@ -145,10 +145,9 @@ class GameLayer: SKSpriteNode {
         
     }
     
-    // Register the different button presses
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         for touch in touches {
-            let thisPosition: CGPoint = touch.locationInNode(self)
+            let thisPosition: CGPoint = (touch as! UITouch).locationInNode(self)
             if self.nodeAtPoint(thisPosition) == playButton {
                 delegate?.playButtonPressed()
             }
@@ -161,7 +160,7 @@ class GameLayer: SKSpriteNode {
             else if layerType == "GameOver" && self.nodeAtPoint(thisPosition) == twitterButton {
                 delegate?.twitterButtonPressed()
             }
-            else if layerType == "GameStart" && self.nodeAtPoint(thisPosition) == removeAdsButton? {
+            else if layerType == "GameStart" && self.nodeAtPoint(thisPosition) == removeAdsButton {
                 delegate?.removeAdsButtonPressed()
             }
         }

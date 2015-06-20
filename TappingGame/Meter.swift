@@ -67,7 +67,7 @@ class Meter: SKSpriteNode {
             self.texture = textureArray[11]
         case 0:
             self.texture = textureArray[12]
-            self.delegate?.meterRanOut()
+            //self.delegate?.meterRanOut()
         default:
             return
         }
